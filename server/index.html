@@ -1,0 +1,289 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Orderbook Server Sandbox</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+  </head>
+  <body>
+    <div class="container">
+
+      <h1>QuoteBook API Sandbox</h1>
+      <p>Open the console to see inbound/outbound objects</p>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Commands</th>
+            <th></th>
+            <th>Behavior</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>accountMaster.snapshot</td>
+            <td><a href="#accountMaster.snapshot" class="btn btn-outline-primary command-request">Try It</a></td>
+            <td>Triggers an <kbd>accountMaster</kbd> response, array containing <kbd>account</kbd> messages</td>
+          </tr>
+          <tr>
+            <td>bondMaster.snapshot</td>
+            <td><a href="#bondMaster.snapshot" class="btn btn-outline-primary command-request">Try It</a></td>
+            <td>Triggers a <kbd>bondMaster</kbd> response, array containing <kbd>bond</kbd> messages</td>
+          </tr>
+          <tr>
+            <td>quoteBook.snapshot</td>
+            <td><a href="#quoteBook.snapshot" class="btn btn-outline-primary command-request">Try It</a></td>
+            <td>Triggers a <kbd>quoteBook</kbd> response, array containing active <kbd>quote</kbd> messages</td>
+          </tr>
+          <tr>
+            <td>quoteBook.subscribe</td>
+            <td><a href="#quoteBook.subscribe" class="btn btn-outline-primary command-request">Try It</a></td>
+            <td>Subscribes to all quoteBook updates. Quotes are received as individual <kbd>quoteUpdate</kbd> messages</td>
+          </tr>
+          <tr>
+            <td>quoteBook.unsubscribe</td>
+            <td><a href="#quoteBook.unsubscribe" class="btn btn-outline-primary command-request">Try It</a></td>
+            <td>Unsubscribes to quoteBook updates.</td>
+          </tr>
+          <tr>
+            <td>quote.create</td>
+            <td><a href="#quote.create" class="btn btn-outline-primary quote-create">Try It</a></td>
+            <td>Creates a new quote. Triggers <kbd>quoteAccepted</kbd> or <kbd>quoteRejected</kbd> response. Send the following payload:
+              <pre>
+{
+  requestId: String - A unique, client-generated string.  Will be echoed on response.
+  accountId: Number - account identifier
+  bondId: String - bond id to quote
+  side: String - 'B' or 'S'
+  price: Number - Price of the quote (i.e. 99.375)
+  qty: Number - Notional qty of the quote (i.e. 1000000)
+}
+              </pre>
+            </td>
+          </tr>
+          <tr>
+            <td>quote.replace</td>
+            <td><a href="#quote.replace" class="btn btn-outline-primary quote-replace">Try It</a></td>
+            <td>
+              Updates a price and qty on an existing quote. Triggers <kbd>quoteAccepted</kbd> or <kbd>quoteRejected</kbd> response. Send the following payload:
+              <pre>
+{
+  requestId: String - A unique, client-generated string.  Will be echoed on response.
+  quoteId: String - ID of the quote you wish to update
+  price: Number - Price of the quote (i.e. 99.375)
+  qty: Number - Notional qty of the quote (i.e. 1000000)
+}
+              </pre>
+            </td>
+          </tr>
+          <tr>
+            <td>quote.cancel</td>
+            <td><a href="#quote.cancel" class="btn btn-outline-primary quote-cancel">Try It</a></td>
+            <td>Cancels an existing quote. Triggers <kbd>quoteAccepted</kbd> or <kbd>quoteRejected</kbd> response. Send the following payload:
+              <pre>
+{
+  requestId: String - A unique, client-generated string.  Will be echoed on response.
+  quoteId: String - ID of the quote you wish to update
+}
+              </pre>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Messages</th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>account</td>
+            <td>
+              <pre>
+{
+  id: unique id of the account
+  name: the display name of the account
+}
+              </pre>
+            </td>
+          </tr>
+          <tr>
+            <td>bond</td>
+            <td>
+              <pre>
+{
+  id: unique id of the bond
+  name: the display name of the bond
+}
+              </pre>
+            </td>
+          </tr>
+          <tr>
+              <td>quote</td>
+              <td>
+                <pre>
+{
+  accountId:   id of the account
+  bondId:      id of the bond
+  createdAt:   timestamp of create
+  id:          id of the quote
+  price:       dollar price of the quote
+  qty:         notional size of the quote
+  sequence:    incrementing version number
+  side:        B=Buy, S=Sell
+  updatedAt:   timestamp of update
+}
+                </pre>
+              </td>
+            <tr>
+
+          <tr>
+            <td>quoteAction</td>
+            <td>
+              <pre>
+{
+  action: N=New, U=Update, C=cancel
+  quote: (See quote message above)
+}
+              </pre>
+            </td>
+          <tr>
+
+          <tr>
+            <td>quoteAccepted</td>
+            <td>
+              <pre>
+{
+  requestId: Request ID of initiating action
+  action: N=New, U=Update, C=cancel
+  quote: (See quote message above)
+}
+              </pre>
+            </td>
+          <tr>
+
+          <tr>
+            <td>quoteRejected</td>
+            <td>
+              <pre>
+{
+  requestId: Request ID of initiating action
+  errors: An array of error messages
+}
+              </pre>
+            </td>
+          <tr>
+        </tbody>
+      </table>
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+  </body>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    var socket = io();
+    var bondMaster = [];
+
+    socket.on('accountMaster', function(msg) {
+      console.log('Incoming: accountMaster', msg);
+    });
+
+    socket.on('bondMaster', function(msg) {
+      console.log('Incoming: bondMaster', msg);
+      bondMaster = msg;
+    });
+
+    socket.on('quoteBook', function(msg) {
+      console.log('Incoming: quoteBook', msg);
+    });
+
+    socket.on('quoteAction', function(msg) {
+      console.log('Incoming: quote', msg);
+    });
+
+    var currentQuote = null;
+    socket.on('quoteAccepted', function(msg) {
+      console.log('Incoming: quoteAccepted', msg);
+
+      if(msg.action === 'N' || msg.action === 'U') {
+        currentQuote = msg.quote;
+      }
+    });
+
+    socket.on('quoteRejected', function(msg) {
+      console.log('Incoming: quoteRejected', msg);
+    });
+
+    $('.command-request').click(function(e) {
+      e.preventDefault();
+
+      var request = $(e.target).attr("href").replace(/#/, '');
+      console.log("Outgoing: ", request);
+      socket.emit(request, {});
+    })
+
+    $('.quote-create').click(function(e) {
+      e.preventDefault();
+
+      if(bondMaster.length == 0) {
+        console.log("Request the bondMaster first!");
+        return
+      }
+
+      var request = {
+        requestId: Math.random().toString(36).substr(2, 5),
+        accountId: 0,
+        bondId: bondMaster[0].id,
+        side: 'B',
+        price: 99.975,
+        qty: 1000000
+      };
+      console.log("Outgoing: quote.create", request);
+      socket.emit('quote.create', request);
+    })
+
+    $('.quote-replace').click(function(e) {
+      e.preventDefault();
+
+      if(!currentQuote) {
+        console.log("Create a quote first!");
+        return
+      }
+
+      var request = {
+        requestId: Math.random().toString(36).substr(2, 5),
+        quoteId: currentQuote.id,
+        price: 99.975,
+        qty: 1000000
+      };
+      console.log("Outgoing: quote.replace", request);
+      socket.emit('quote.replace', request);
+    })
+
+    $('.quote-cancel').click(function(e) {
+      e.preventDefault();
+
+      if(!currentQuote) {
+        console.log("Create a quote first!");
+        return
+      }
+
+      console.log(currentQuote)
+
+      var request = {
+        requestId: Math.random().toString(36).substr(2, 5),
+        quoteId: currentQuote.id
+      };
+      console.log("Outgoing: quote.cancel", request);
+      socket.emit('quote.cancel', request);
+    })
+
+  </script>
+</html>
