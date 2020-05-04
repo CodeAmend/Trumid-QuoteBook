@@ -1,0 +1,22 @@
+{
+  "name": "trumid-quotebook",
+  "version": "1.0.0",
+  "description": "* Set up typescript * set up jest / enzyme",
+  "main": "index.js",
+  "scripts": {
+    "client": "cd client; npm run start",
+    "server": "cd server; npm run start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CodeAmend/Trumid-QuoteBook.git"
+  },
+  "author": "Michael Bruce Allen <codeamend@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CodeAmend/Trumid-QuoteBook/issues"
+  },
+  "homepage": "https://github.com/CodeAmend/Trumid-QuoteBook#readme",
+  "devDependencies": {},
+  "dependencies": {}
+}
