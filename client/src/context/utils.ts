@@ -1,9 +1,37 @@
-import { IBestBidBuy, BondQuote, LookUpTables } from './types';
+import {
+  BidBuy,
+  BondsByName,
+  BestBidBuy,
+  BondQuote,
+  LookUpTables,
+} from './types';
 
 
-export const processBestBidBuy = (quotes: BondQuote[], tables: LookUpTables): IBestBidBuy => {
+const sorter = (sortType: string) => (a: any, b: any) => {
+  if (a[sortType] > b[sortType]) return 1;
+  if (a[sortType] < b[sortType]) return 2;
+  return -1;
+}
+const byPrice = sorter('price');
 
-  const bestBidBuy = quotes.reduce((acc: any, item: BondQuote) => {
+
+export const getBestBidsFromReducedBonds = (bondsByName: BondsByName): BestBidBuy[] => {
+  const topBidOffers: BestBidBuy[] = [];
+
+  for (let [bondName, { bid, offer }] of Object.entries(bondsByName)) {
+    const bestBid: BidBuy = bid.sort(byPrice)[0];
+    const bestOffer: BidBuy = offer.sort(byPrice)[0];
+    topBidOffers.push({
+      bondName,
+      bid: bestBid || null,
+      offer: bestOffer || null,
+    })
+  }
+  return topBidOffers; 
+}
+
+export const reduceBondQuotes = (quotes: BondQuote[], tables: LookUpTables): BondsByName => {
+  const bondsByName = quotes.reduce((acc: any, item: BondQuote) => {
 
     // accountId and bondId filter
     const accountMatch = tables.accounts.find(account => account.id === item.accountId);
@@ -27,5 +55,5 @@ export const processBestBidBuy = (quotes: BondQuote[], tables: LookUpTables): IB
     return acc;
   }, {});
 
-  return bestBidBuy;
+  return bondsByName;
 }

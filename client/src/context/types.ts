@@ -36,7 +36,7 @@ export interface IUseQuoteBook {
   lookupTables: LookUpTables;
   updateQuoteBook: () => void; 
   quoteBook: BondQuote[],
-  bestBidBuy: IBestBidBuy;
+  bestBidBuy: BestBidBuy[];
 }
 
 export type BidBuy = {
@@ -44,9 +44,15 @@ export type BidBuy = {
   amount: string;
   client: string;
 }
-export interface IBestBidBuy {
+export interface BondsByName {
   [key: string]: {
     bid: BidBuy[];
     offer: BidBuy[];
   }
+}
+
+export interface BestBidBuy {
+  bondName: string;
+  bid: BidBuy | null;
+  offer: BidBuy | null;
 }
