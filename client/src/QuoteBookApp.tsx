@@ -4,17 +4,16 @@ import { useQuotebook } from './context/hooks'
 
 
 function QuoteBookApp() {
-  const { updateQuoteBook, quoteBook } = useQuotebook();
+  const { updateQuoteBook, bestBidBuy } = useQuotebook();
 
   React.useEffect(() => {
     updateQuoteBook();
   }, [])
 
-
   // TODO: just for testing
   React.useEffect(() => {
-    console.log(quoteBook)
-  }, [quoteBook])
+    console.log(bestBidBuy)
+  }, [bestBidBuy])
 
   return (
     <Container data-test="component-quotebookapp">

@@ -9,7 +9,6 @@ interface ProviderProps {
   children: ReactNode;
 }
 
-
 interface IQuoteBookContext {
   socket: any;
   lookupTables: LookUpTables;

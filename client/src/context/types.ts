@@ -1,18 +1,11 @@
-export type BondAction = "N" | "C" | "C";
-
 export type BondMaster = {
-  id: number;
-  name: string;
-}
-
-export type AccountMaster = {
   id: string;
   name: string;
 }
 
-export type LookUpTables = {
-  bonds: BondMaster[];
-  accounts: AccountMaster[];
+export type AccountMaster = {
+  id: number;
+  name: string;
 }
 
 export type BondQuote = {
@@ -21,20 +14,39 @@ export type BondQuote = {
   createdAt: string;
   id: string;
   price: number;
-  reqId: string;
   qty: number;
   sequence: number
   side: "S" | "B";
   updatedAt: string;
+  reqId?: string;
 }
 
-export interface QuoteAction {
-  action: BondAction;
+export type QuoteAction = {
+  action: "N" | "C" | "C";
   quote: BondQuote;
+}
+
+
+export type LookUpTables = {
+  bonds: BondMaster[];
+  accounts: AccountMaster[];
 }
 
 export interface IUseQuoteBook {
   lookupTables: LookUpTables;
   updateQuoteBook: () => void; 
   quoteBook: BondQuote[],
+  bestBidBuy: IBestBidBuy;
+}
+
+export type BidBuy = {
+  qty: string;
+  amount: string;
+  client: string;
+}
+export interface IBestBidBuy {
+  [key: string]: {
+    bid: BidBuy[];
+    offer: BidBuy[];
+  }
 }
