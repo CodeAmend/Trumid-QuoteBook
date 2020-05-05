@@ -1,19 +1,22 @@
 import React from 'react';
 import quoteBookContext from '.';
-import { IUseQuoteBook, QuoteAction } from './types';
+import { IUseQuoteBook } from './types';
 
 export const useQuotebook = (): IUseQuoteBook => {
-  const { socket, lookupTables } = React.useContext(quoteBookContext.context)
+  const {
+    socket,
+    lookupTables,
+    quoteBook,
+  } = React.useContext(quoteBookContext.context)
 
-  // Websocket Listeners
-  React.useEffect(() => {
-    socket.on('quoteAction', (quoteAction: QuoteAction) => {
-      console.log(quoteAction)
-    });
-  }, [])
+  const updateQuoteBook = (): void => {
+    socket.emit('quoteBook.snapshot');
+  }
 
   return {
     lookupTables,
+    updateQuoteBook,
+    quoteBook,
   }
 }
 

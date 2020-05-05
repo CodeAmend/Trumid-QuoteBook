@@ -35,4 +35,6 @@ export interface QuoteAction {
 
 export interface IUseQuoteBook {
   lookupTables: LookUpTables;
+  updateQuoteBook: () => void; 
+  quoteBook: BondQuote[],
 }

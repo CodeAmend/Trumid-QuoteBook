@@ -1,10 +1,20 @@
 import React from 'react';
 import { Container } from '@material-ui/core';
-// import { useQuotebook } from './context/hooks'
+import { useQuotebook } from './context/hooks'
+
 
 function QuoteBookApp() {
-  // const { lookupTables } = useQuotebook();
-  console.count('count')
+  const { updateQuoteBook, quoteBook } = useQuotebook();
+
+  React.useEffect(() => {
+    updateQuoteBook();
+  }, [])
+
+
+  // TODO: just for testing
+  React.useEffect(() => {
+    console.log(quoteBook)
+  }, [quoteBook])
 
   return (
     <Container data-test="component-quotebookapp">
