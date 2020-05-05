@@ -1,4 +1,5 @@
-// TODO find out what typescript class to use shollow
-export const findByTestAttr = (wrapper: any, value: string) => {
+import { ShallowWrapper } from 'enzyme';
+
+export const findByTestAttr = (wrapper: ShallowWrapper, value: string) => {
   return wrapper.find(`[data-test='${value}']`);
 }
