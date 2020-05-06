@@ -16,9 +16,15 @@ export const quoteBookReducer = (state: any, action: any): any => {
       return { ...state, quoteBook: action.payload};
 
     case actionTypes.PROCESS_BOND_QUOTES:
-      const quotes = action.payload;
       const { accountMaster, bondMaster } = state;
-      const bondsByName = reduceBondQuotes({ accountMaster, bondMaster, quotes });
+
+      // Creates object with bonds names as keys AND marries the master tables data
+      const bondsByName = reduceBondQuotes({
+        quotes: action.payload,
+        bondMaster,
+        accountMaster,
+      });
+
       const bestBids = getBestBidsFromReducedBonds(bondsByName);
       const bondsBy = { nameKeys: bondsByName, bids: bestBids };
       return { ...state, bondsBy };

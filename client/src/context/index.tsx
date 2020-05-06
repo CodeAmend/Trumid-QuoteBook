@@ -1,6 +1,6 @@
 import React, {ReactNode} from 'react';
 import io from 'socket.io-client';
-import { BondMaster, BondsBy, BondQuote, AccountMaster } from './types'
+import { BondMaster, BondsBy, BondQuote, QuoteAction, AccountMaster } from './types'
 import { actions } from './actions';
 import { quoteBookReducer } from './reducer';
 const socket = io('http://localhost:3000');
@@ -13,10 +13,11 @@ interface QuoteBookContext {
   accountMaster: AccountMaster[],
   bondMaster: BondMaster[],
 }
+
 // TODO: find out why I have to declare a context with typescript when I want null???
 const initialQuoteBookContext = {
   socket: null,
-  bondsBy: { bids: [] , nameKeys: {} },
+  bondsBy: { bids: [] , bondIdKeys: {} },
   quoteBook: [],
   accountMaster: [],
   bondMaster: [],
@@ -26,12 +27,11 @@ const initialReducerState = {
   quoteBook: [],
   bondsBy: {
     bids: [],
-    nameKeys: {},
+    bondIdKeys: {},
   },
   accountMaster: [],
   bondMaster: [],
 };
-
 
 export const context = React.createContext<QuoteBookContext>(initialQuoteBookContext);
 
@@ -48,8 +48,13 @@ export const Provider = (props: { children: ReactNode }) => {
     socket.on('quoteBook',
       (quoteBook: BondQuote[]) => dispatch(actions.processBondQuotes(quoteBook)));
 
+      socket.on('quoteAction', (quoteAction: QuoteAction) => {
+        console.log(quoteAction);
+      });
+
     socket.emit('accountMaster.snapshot');
     socket.emit('bondMaster.snapshot');
+
     // socket.on('quoteAccepted', console.log);
     // socket.on('quoteRejected', console.log);
   }, []);

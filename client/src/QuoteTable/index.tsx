@@ -11,6 +11,8 @@ const QuoteTable = () => {
 
   if (!bondsBy.bids.length) return null;
 
+  console.log(bondsBy)
+
   return(
     <Table>
       <thead>

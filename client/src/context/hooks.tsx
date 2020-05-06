@@ -20,6 +20,10 @@ export const useQuotebook = (): IUseQuoteBook => {
     // TODO: an embarrising hack until I find a simple solution for guided async calls
     setTimeout(() => {
       socket.emit('quoteBook.snapshot');
+      socket.emit('quoteBook.subscribe');
+      setTimeout(() => {
+        socket.emit('quoteBook.unsubscribe');
+      }, 3000)
     }, 500);
   }
 

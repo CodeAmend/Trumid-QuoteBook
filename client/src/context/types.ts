@@ -13,12 +13,6 @@ export type QuoteAction = {
   quote: BondQuote;
 }
 
-export type BidBuy = {
-  qty: string;
-  price: string;
-  client: string;
-}
-
 export type QuoteBookPayload = {
   quotes: BondQuote[];
   accountMaster: AccountMaster[];
@@ -70,8 +64,15 @@ export interface CancelQuote {
   quoteId: string;
 }
 
-export interface BondsByNameKey {
+export type BidBuy = {
+  qty: string;
+  price: string;
+  client: string;
+}
+
+export interface BondsByBondIdKey {
   [key: string]: {
+    bondName: string;
     bid: BidBuy[];
     offer: BidBuy[];
   }
@@ -79,12 +80,13 @@ export interface BondsByNameKey {
 
 export interface BondsByBids {
   bondName: string;
+  bondId: string;
   bid: BidBuy; 
   offer: BidBuy; 
 }
 
 export interface BondsBy {
-  nameKeys: BondsByNameKey;
+  bondIdKeys: BondsByBondIdKey;
   bids: BondsByBids[];
 }
 
