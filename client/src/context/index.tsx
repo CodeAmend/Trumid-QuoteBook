@@ -5,8 +5,7 @@ import { BondMaster, BondQuote, AccountMaster, LookUpTables } from './types'
 const socket = io('http://localhost:3000');
 
 
-interface ProviderProps {
-  children: ReactNode;
+interface ProviderProps { children: ReactNode;
 }
 
 interface QuoteBookContext {
@@ -24,26 +23,26 @@ const initialQuoteBookContext = {
 // TODO: find out why I have to declare a context with typescript when I want null???
 export const context = React.createContext<QuoteBookContext>(initialQuoteBookContext);
 
+export const useMountEffect = (func: () => void) => React.useEffect(func, []);
 
 export const Provider = (props: ProviderProps) => {
   const [quoteBook, setQuoteBook] = React.useState<BondQuote[]>([]);
   const [bondMaster, setBondMaster] = React.useState<BondMaster[]>([]);
   const [accountMaster, setAccountMaster] = React.useState<AccountMaster[]>([]);
 
-  React.useEffect(() => {
-    if (!bondMaster.length) {
-      socket.on('bondMaster', setBondMaster);
-      socket.emit('bondMaster.snapshot');
-    }
+  useMountEffect(() => {
+    socket.on('bondMaster', setBondMaster);
+    socket.emit('bondMaster.snapshot');
+  });
 
-    if (!accountMaster.length) {
-      socket.on('accountMaster', setAccountMaster);
-      socket.emit('accountMaster.snapshot');
-    } 
+  useMountEffect(() => {
+    socket.on('accountMaster', setAccountMaster);
+    socket.emit('accountMaster.snapshot');
+  });
 
+  useMountEffect(() => {
     socket.on('quoteBook', setQuoteBook);
-
-  }, [accountMaster, bondMaster])
+  });
 
   const lookupTables: LookUpTables = { bonds: bondMaster, accounts: accountMaster };
 

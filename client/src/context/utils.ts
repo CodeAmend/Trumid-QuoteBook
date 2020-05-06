@@ -37,8 +37,8 @@ export const reduceBondQuotes = (quotes: BondQuote[], tables: LookUpTables): Bon
     const accountMatch = tables.accounts.find(account => account.id === item.accountId);
     const bondMatch = tables.bonds.find(bond => bond.id === item.bondId);
 
-    if (!accountMatch) throw `No account matching accountId ${item.accountId}`
-    if (!bondMatch) throw `No account matching bondId ${item.bondId}`
+    if (!accountMatch) throw new Error(`No account matching accountId ${item.accountId}`)
+    if (!bondMatch) throw new Error(`No account matching bondId ${item.bondId}`)
 
     // Initial object with Bond name keys 
     if (!acc[bondMatch.name]) acc[bondMatch.name] = { bid: [], offer: [] };

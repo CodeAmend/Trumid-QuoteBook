@@ -9,12 +9,13 @@ export const useQuotebook = (): IUseQuoteBook => {
     lookupTables,
     quoteBook,
   } = React.useContext(quoteBookContext.context)
-
+  
   const updateQuoteBook = (): void => {
     socket.emit('quoteBook.snapshot');
   }
-  
+
   const bestBidBuy: BestBidBuy[] = React.useMemo(() => {
+    
     if ( !quoteBook.length || !lookupTables.bonds.length || !lookupTables.accounts.length) {
      return [];
     }

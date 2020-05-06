@@ -7,16 +7,9 @@ import { useQuotebook } from '../context/hooks';
 const QuoteTable = () => {
   const { updateQuoteBook, bestBidBuy } = useQuotebook();
 
-  React.useEffect(() => {
-    updateQuoteBook();
-  }, [])
+  React.useEffect(updateQuoteBook, []);
 
-  // TODO: just for testing
-  React.useEffect(() => {
-    if (bestBidBuy) {
-    }
-  }, [bestBidBuy])
-
+  if (!bestBidBuy.length) return null;
 
   return(
     <Table>
