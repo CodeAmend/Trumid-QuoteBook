@@ -6,31 +6,35 @@ import {
   CreateQuote,
   CancelQuote,
 } from './types';
-import { reduceBondQuotes, getBestBidsFromReducedBonds } from './utils';
 
 
 export const useQuotebook = (): IUseQuoteBook => {
   const {
     socket,
-    quoteBook,
+    bondsBy,
     accountMaster,
     bondMaster,
   } = React.useContext(quoteBookContext.context)
 
-  const bondsBy = React.useMemo(() => {
-    if (accountMaster.length && bondMaster.length) {
-      const bondsByName = reduceBondQuotes({ accountMaster, bondMaster, quotes: quoteBook });
-      const bestBids = getBestBidsFromReducedBonds(bondsByName);
-      return { nameKeys: bondsByName, bids: bestBids };
-    }
-    return {
-      nameKeys: {},
-      bids: [],
-    }
-  }, [accountMaster, bondMaster]);
+  // console.log({ bondsBy })
+
+  // const bondsBy = React.useMemo(() => {
+  //   if (accountMaster.length && bondMaster.length) {
+  //     const bondsByName = reduceBondQuotes({ accountMaster, bondMaster, quotes: quoteBook });
+  //     const bestBids = getBestBidsFromReducedBonds(bondsByName);
+  //     return { nameKeys: bondsByName, bids: bestBids };
+  //   }
+  //   return {
+  //     nameKeys: {},
+  //     bids: [],
+  //   }
+  // }, [accountMaster, bondMaster]);
 
   const updateQuoteBook = (): void => {
-    socket.emit('quoteBook.snapshot');
+    // TODO: an embarrising hack until I find a simple solution for guided async calls
+    setTimeout(() => {
+      socket.emit('quoteBook.snapshot');
+    }, 500);
   }
 
   const subscribeToQuotes = (): void => {
@@ -81,6 +85,7 @@ export const useQuotebook = (): IUseQuoteBook => {
     createQuote,
     replaceQuote,
     cancelQuote,
+    masterAreReady: !!(accountMaster.length && bondMaster.length),
   }
 }
 

@@ -96,4 +96,5 @@ export interface IUseQuoteBook {
   createQuote: (request: CreateQuote) => void;
   replaceQuote: (request: ReplaceQuote) => void;
   cancelQuote: () => void;
+  masterAreReady: boolean;
 }

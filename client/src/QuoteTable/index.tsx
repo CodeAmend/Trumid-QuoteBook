@@ -7,9 +7,7 @@ import { useQuotebook } from '../context/hooks';
 const QuoteTable = () => {
   const { updateQuoteBook, bondsBy } = useQuotebook();
 
-  React.useEffect(() => {
-    updateQuoteBook();
-  }, []);
+  React.useEffect(updateQuoteBook, []);
 
   if (!bondsBy.bids.length) return null;
 
