@@ -1,9 +1,10 @@
+import React from 'react';
 import {
   BidBuy,
-  BondsByName,
-  BestBidBuy,
+  BondsByNameKey,
   BondQuote,
-  LookUpTables,
+  BondsByBids,
+  QuoteBookPayload,
 } from './types';
 
 
@@ -15,10 +16,10 @@ const sorter = (sortType: string) => (a: any, b: any) => {
 const byPrice = sorter('price');
 
 
-export const getBestBidsFromReducedBonds = (bondsByName: BondsByName): BestBidBuy[] => {
-  const topBidOffers: BestBidBuy[] = [];
+export const getBestBidsFromReducedBonds = (bondsByNameKey: BondsByNameKey): BondsByBids[] => {
+  const topBidOffers: BondsByBids[] = [];
 
-  for (let [bondName, { bid, offer }] of Object.entries(bondsByName)) {
+  for (let [bondName, { bid, offer }] of Object.entries(bondsByNameKey)) {
     const bestBid: BidBuy = bid.sort(byPrice)[0];
     const bestOffer: BidBuy = offer.sort(byPrice)[0];
     topBidOffers.push({
@@ -30,12 +31,13 @@ export const getBestBidsFromReducedBonds = (bondsByName: BondsByName): BestBidBu
   return topBidOffers; 
 }
 
-export const reduceBondQuotes = (quotes: BondQuote[], tables: LookUpTables): BondsByName => {
-  const bondsByName = quotes.reduce((acc: any, item: BondQuote) => {
+export const reduceBondQuotes = (props: QuoteBookPayload): BondsByNameKey => {
+  const { quotes, accountMaster, bondMaster } = props;
 
+  const bondsByNameKey = quotes.reduce((acc: any, item: BondQuote) => {
     // accountId and bondId filter
-    const accountMatch = tables.accounts.find(account => account.id === item.accountId);
-    const bondMatch = tables.bonds.find(bond => bond.id === item.bondId);
+    const accountMatch = accountMaster.find(account => account.id === item.accountId);
+    const bondMatch = bondMaster.find(bond => bond.id === item.bondId);
 
     if (!accountMatch) throw new Error(`No account matching accountId ${item.accountId}`)
     if (!bondMatch) throw new Error(`No account matching bondId ${item.bondId}`)
@@ -55,5 +57,8 @@ export const reduceBondQuotes = (quotes: BondQuote[], tables: LookUpTables): Bon
     return acc;
   }, {});
 
-  return bondsByName;
+  return bondsByNameKey;
 }
+
+// Trick to make like componentDidMount, no lint error for missing dependency
+export const useMountEffect = (func: () => void) => React.useEffect(func, []);

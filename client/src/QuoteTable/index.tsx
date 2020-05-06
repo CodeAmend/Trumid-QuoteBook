@@ -1,15 +1,17 @@
 import React from "react"
 import { Table } from './styles';
-import { BestBidBuy } from '../context/types';
+import { BondsByBids } from '../context/types';
 import { useQuotebook } from '../context/hooks';
 
 
 const QuoteTable = () => {
-  const { updateQuoteBook, bestBidBuy } = useQuotebook();
+  const { updateQuoteBook, bondsBy } = useQuotebook();
 
-  React.useEffect(updateQuoteBook, []);
+  React.useEffect(() => {
+    updateQuoteBook();
+  }, []);
 
-  if (!bestBidBuy.length) return null;
+  if (!bondsBy.bids.length) return null;
 
   return(
     <Table>
@@ -26,7 +28,7 @@ const QuoteTable = () => {
       </thead>
       <tbody>
       {/* TODO: Why do I need to add this Interface here??? Bug?? */}
-        {bestBidBuy && bestBidBuy.map(({ bondName, bid, offer }: BestBidBuy) => (
+        {bondsBy.bids.length && bondsBy.bids.map(({ bondName, bid, offer }: BondsByBids) => (
           <tr key={bondName}>
             <td>{bondName}</td>
             <td>{bid?.client}</td>

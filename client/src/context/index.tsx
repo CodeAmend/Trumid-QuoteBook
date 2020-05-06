@@ -1,39 +1,47 @@
 import React, {ReactNode} from 'react';
-import io from 'socket.io-client';
-import { BondMaster, BondQuote, AccountMaster, LookUpTables } from './types'
+import useSocket from 'use-socket.io-client';
+import { BondMaster, BondQuote, AccountMaster } from './types'
+import { useMountEffect } from  './utils';
+// import { processBondQuotes } from './actions';
+// import { quoteBookReducer } from './reducer';
 
-const socket = io('http://localhost:3000');
-
-
-interface ProviderProps { children: ReactNode;
-}
 
 interface QuoteBookContext {
   socket: any;
-  lookupTables: LookUpTables;
+  // bondsBy: BondsBy;
   quoteBook: BondQuote[];
+  accountMaster: AccountMaster[],
+  bondMaster: BondMaster[],
 }
+// TODO: find out why I have to declare a context with typescript when I want null???
 const initialQuoteBookContext = {
   socket: null,
   lookupTables: { bonds: [], accounts: [] },
+  // bondsBy: { bids: [] , nameKeys: {} },
   quoteBook: [],
+  accountMaster: [],
+  bondMaster: [],
 };
 
+// const initialBondsBy = { bids: [], nameKeys: {} };
 
-// TODO: find out why I have to declare a context with typescript when I want null???
+
 export const context = React.createContext<QuoteBookContext>(initialQuoteBookContext);
 
-export const useMountEffect = (func: () => void) => React.useEffect(func, []);
-
-export const Provider = (props: ProviderProps) => {
-  const [quoteBook, setQuoteBook] = React.useState<BondQuote[]>([]);
+export const Provider = (props: { children: ReactNode }) => {
+  const [socket] = useSocket('http://localhost:3000');
   const [bondMaster, setBondMaster] = React.useState<BondMaster[]>([]);
   const [accountMaster, setAccountMaster] = React.useState<AccountMaster[]>([]);
+  const [quoteBook, setQuoteBook] = React.useState<BondQuote[]>([])
 
+  // const [bondsBy, dispatchBondsBy] = React.useReducer(quoteBookReducer, initialBondsBy);
+  
   useMountEffect(() => {
     socket.on('quoteBook', setQuoteBook);
     socket.on('bondMaster', setBondMaster);
     socket.on('accountMaster', setAccountMaster);
+    socket.emit('bondMaster.snapshot');
+    socket.emit('accountMaster.snapshot');
 
     // TODO reducer for these
     socket.on('quoteAction', console.log);
@@ -41,17 +49,18 @@ export const Provider = (props: ProviderProps) => {
     socket.on('quoteRejected', console.log);
   });
 
-  useMountEffect(() => {
-    socket.emit('bondMaster.snapshot');
-    socket.emit('accountMaster.snapshot');
-  });
-
-  const lookupTables: LookUpTables = { bonds: bondMaster, accounts: accountMaster };
+  // useMountEffect(() => {
+  //   socket.on('quoteBook', (quotes: BondQuote[]) => {
+  //     dispatchBondsBy(processBondQuotes({ quotes, accountMaster, bondMaster }));
+  //   });
+  // });
 
   const initialValue = {
     socket,
+    // bondsBy,
     quoteBook,
-    lookupTables,
+    accountMaster,
+    bondMaster,
   }
 
   return (

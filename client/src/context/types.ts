@@ -13,28 +13,16 @@ export type QuoteAction = {
   quote: BondQuote;
 }
 
-
-export type LookUpTables = {
-  bonds: BondMaster[];
-  accounts: AccountMaster[];
-}
-
 export type BidBuy = {
   qty: string;
   price: string;
   client: string;
 }
-export interface BondsByName {
-  [key: string]: {
-    bid: BidBuy[];
-    offer: BidBuy[];
-  }
-}
 
-export interface BestBidBuy {
-  bondName: string;
-  bid: BidBuy; 
-  offer: BidBuy; 
+export type QuoteBookPayload = {
+  quotes: BondQuote[];
+  accountMaster: AccountMaster[];
+  bondMaster: BondMaster[];
 }
 
 export type BondQuote = {
@@ -82,10 +70,26 @@ export interface CancelQuote {
   quoteId: string;
 }
 
+export interface BondsByNameKey {
+  [key: string]: {
+    bid: BidBuy[];
+    offer: BidBuy[];
+  }
+}
+
+export interface BondsByBids {
+  bondName: string;
+  bid: BidBuy; 
+  offer: BidBuy; 
+}
+
+export interface BondsBy {
+  nameKeys: BondsByNameKey;
+  bids: BondsByBids[];
+}
+
 export interface IUseQuoteBook {
-  lookupTables: LookUpTables;
-  quoteBook: BondQuote[],
-  bestBidBuy: BestBidBuy[];
+  bondsBy: BondsBy;
   updateQuoteBook: () => void; 
   subscribeToQuotes: () => void;
   unsubscribeFromQuotes: () => void;
