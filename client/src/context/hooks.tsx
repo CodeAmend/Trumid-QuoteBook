@@ -16,20 +16,6 @@ export const useQuotebook = (): IUseQuoteBook => {
     bondMaster,
   } = React.useContext(quoteBookContext.context)
 
-  // console.log({ bondsBy })
-
-  // const bondsBy = React.useMemo(() => {
-  //   if (accountMaster.length && bondMaster.length) {
-  //     const bondsByName = reduceBondQuotes({ accountMaster, bondMaster, quotes: quoteBook });
-  //     const bestBids = getBestBidsFromReducedBonds(bondsByName);
-  //     return { nameKeys: bondsByName, bids: bestBids };
-  //   }
-  //   return {
-  //     nameKeys: {},
-  //     bids: [],
-  //   }
-  // }, [accountMaster, bondMaster]);
-
   const updateQuoteBook = (): void => {
     // TODO: an embarrising hack until I find a simple solution for guided async calls
     setTimeout(() => {
