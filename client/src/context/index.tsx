@@ -9,19 +9,20 @@ interface ProviderProps {
   children: ReactNode;
 }
 
-interface IQuoteBookContext {
+interface QuoteBookContext {
   socket: any;
   lookupTables: LookUpTables;
   quoteBook: BondQuote[];
 }
-
-
-// TODO: find out why I have to declare a context with typescript when I want null???
-export const context = React.createContext<IQuoteBookContext>({
+const initialQuoteBookContext = {
   socket: null,
   lookupTables: { bonds: [], accounts: [] },
   quoteBook: [],
-});
+};
+
+
+// TODO: find out why I have to declare a context with typescript when I want null???
+export const context = React.createContext<QuoteBookContext>(initialQuoteBookContext);
 
 
 export const Provider = (props: ProviderProps) => {

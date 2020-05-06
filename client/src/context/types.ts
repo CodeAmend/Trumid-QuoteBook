@@ -41,7 +41,7 @@ export interface IUseQuoteBook {
 
 export type BidBuy = {
   qty: string;
-  amount: string;
+  price: string;
   client: string;
 }
 export interface BondsByName {
@@ -53,6 +53,6 @@ export interface BondsByName {
 
 export interface BestBidBuy {
   bondName: string;
-  bid: BidBuy | null;
-  offer: BidBuy | null;
+  bid: BidBuy; 
+  offer: BidBuy; 
 }
