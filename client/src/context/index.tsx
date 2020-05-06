@@ -31,17 +31,19 @@ export const Provider = (props: ProviderProps) => {
   const [accountMaster, setAccountMaster] = React.useState<AccountMaster[]>([]);
 
   useMountEffect(() => {
-    socket.on('bondMaster', setBondMaster);
-    socket.emit('bondMaster.snapshot');
-  });
-
-  useMountEffect(() => {
-    socket.on('accountMaster', setAccountMaster);
-    socket.emit('accountMaster.snapshot');
-  });
-
-  useMountEffect(() => {
     socket.on('quoteBook', setQuoteBook);
+    socket.on('bondMaster', setBondMaster);
+    socket.on('accountMaster', setAccountMaster);
+
+    // TODO reducer for these
+    socket.on('quoteAction', console.log);
+    socket.on('quoteAccepted', console.log);
+    socket.on('quoteRejected', console.log);
+  });
+
+  useMountEffect(() => {
+    socket.emit('bondMaster.snapshot');
+    socket.emit('accountMaster.snapshot');
   });
 
   const lookupTables: LookUpTables = { bonds: bondMaster, accounts: accountMaster };
