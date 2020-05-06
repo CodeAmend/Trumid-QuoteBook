@@ -1,11 +1,33 @@
 import { actionTypes } from './actions';
 import { reduceBondQuotes, getBestBidsFromReducedBonds } from './utils';
-// import { BondsBy, QuoteBookPayload } from './types';
+import { BondsByBondIdKey, BondQuote, AccountMaster, BondMaster } from './types';
 
 
-export const quoteBookReducer = (state: any, action: any): any => {
+interface GlobalState {
+  bondIdKeyValues: BondsByBondIdKey;
+  bestBids: [];
+  currentQuote: BondQuote;
+  quoteBook: BondQuote[];
+  accountMaster: AccountMaster[];
+  bondMaster: BondMaster[];
+}
+
+export const quoteBookReducer = (state: GlobalState, action: any): any => {
   // console.log(action.type, action.payload)
+
   switch (action.type) {
+    // case actionTypes.QUOTE_CREATE:
+    //   console.log(action.type)
+    //   return {};
+
+    // case actionTypes.QUOTE_UPDATE:
+    //   console.log(action.type)
+    //   break;
+
+    // case actionTypes.QUOTE_CANCEL:
+    //   console.log(action.type)
+    //   break;
+
     case actionTypes.UPDATE_ACCOUNT_MASTER_WITH:
       return { ...state, accountMaster: action.payload};
 
@@ -31,4 +53,6 @@ export const quoteBookReducer = (state: any, action: any): any => {
     default:
       return state;
   }
+
+  return state;
 }

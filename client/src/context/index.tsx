@@ -48,9 +48,11 @@ export const Provider = (props: { children: ReactNode }) => {
     socket.on('quoteBook',
       (quoteBook: BondQuote[]) => dispatch(actions.processBondQuotes(quoteBook)));
 
-      socket.on('quoteAction', (quoteAction: QuoteAction) => {
-        console.log(quoteAction);
-      });
+    socket.on('quoteAction', ({ action, quote }: QuoteAction) => {
+      if (action === 'N') dispatch(actions.createQuoteWith(quote));
+      if (action === 'U') dispatch(actions.updateQuoteWith(quote));
+      if (action === 'C') dispatch(actions.cancelQuoteWith(quote));
+    });
 
     socket.emit('accountMaster.snapshot');
     socket.emit('bondMaster.snapshot');

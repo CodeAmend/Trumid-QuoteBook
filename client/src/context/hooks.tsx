@@ -75,7 +75,6 @@ export const useQuotebook = (): IUseQuoteBook => {
     createQuote,
     replaceQuote,
     cancelQuote,
-    masterAreReady: !!(accountMaster.length && bondMaster.length),
   }
 }
 

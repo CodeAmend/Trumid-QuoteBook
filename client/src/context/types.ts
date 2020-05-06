@@ -9,7 +9,7 @@ export type AccountMaster = {
 }
 
 export type QuoteAction = {
-  action: "N" | "C" | "C";
+  action: "N" | "C" | "U";
   quote: BondQuote;
 }
 
@@ -98,5 +98,4 @@ export interface IUseQuoteBook {
   createQuote: (request: CreateQuote) => void;
   replaceQuote: (request: ReplaceQuote) => void;
   cancelQuote: () => void;
-  masterAreReady: boolean;
 }
