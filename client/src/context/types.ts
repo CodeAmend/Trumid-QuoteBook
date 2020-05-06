@@ -19,7 +19,7 @@ export type SnapshotProps = {
   bondMaster: BondMaster[];
 }
 
-export type BondQuote = {
+export interface BondQuote {
   accountId: number;
   bondId: string;
   createdAt: string;
@@ -70,7 +70,7 @@ export type BidBuy = {
   client: string;
 }
 
-export interface BondsByBondIdKey {
+export type BondsByBondIdKey = {
   [key: string]: {
     bondName: string;
     bid: BidBuy[];
@@ -83,11 +83,6 @@ export interface BondsByBids {
   bondId: string;
   bid: BidBuy; 
   offer: BidBuy; 
-}
-
-export interface BondsBy {
-  bondIdKeys: BondsByBondIdKey;
-  bids: BondsByBids[];
 }
 
 export interface QuoteBookHooks {

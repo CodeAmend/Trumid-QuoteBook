@@ -33,9 +33,19 @@ export const Provider = (props: { children: ReactNode }) => {
 
   // Initialize socketOn and emit initial snapshots
   React.useEffect(() => {
+    // socket.on('quoteAction', ({ action, quote }: QuoteAction) => {
+    //   if (action === 'N') dispatchCrud(actions.createQuoteWith(quote));
+    //   if (action === 'U') dispatchCrud(actions.updateQuoteWith(quote));
+    //   if (action === 'C') dispatchCrud(actions.cancelQuoteWith(quote));
+    // });
+
+    // socket.on('quoteAccepted', console.log);
+    // socket.on('quoteRejected', console.log);
+
     socket.on('accountMaster', setAccountMaster);
     socket.on('bondMaster', setBondMaster);
     socket.on('quoteBook', setQuoteBook);
+
     socket.emit('accountMaster.snapshot')
     socket.emit('bondMaster.snapshot')
   }, [])
@@ -57,14 +67,7 @@ export const Provider = (props: { children: ReactNode }) => {
     }
   }, [quoteBook]);
 
-  console.log(state)
   // React.useEffect(() => {
-  //   socket.on('quoteAction', ({ action, quote }: QuoteAction) => {
-  //     if (action === 'N') dispatchCrud(actions.createQuoteWith(quote));
-  //     if (action === 'U') dispatchCrud(actions.updateQuoteWith(quote));
-  //     if (action === 'C') dispatchCrud(actions.cancelQuoteWith(quote));
-  //     socket.on('quoteAccepted', console.log);
-  //     socket.on('quoteRejected', console.log);
   //   });
   // }, []);
 

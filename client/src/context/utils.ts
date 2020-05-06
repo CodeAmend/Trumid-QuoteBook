@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   BidBuy,
   BondsByBondIdKey,
@@ -74,7 +73,3 @@ export const combineSnapshotsToBondIdKeyValues = (props: SnapshotProps): BondsBy
 
   return reducedBondsByBondIdKey;
 }
-
-// Trick to make like componentDidMount, no lint error for missing dependency
-export const useMountEffect = (func: () => void) => React.useEffect(func, []);
-
