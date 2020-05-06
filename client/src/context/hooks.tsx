@@ -1,31 +1,17 @@
 import React from 'react';
 import quoteBookContext from '.';
 import {
-  IUseQuoteBook,
+  QuoteBookHooks,
   ReplaceQuote,
   CreateQuote,
   CancelQuote,
 } from './types';
 
 
-export const useQuotebook = (): IUseQuoteBook => {
+export const useQuotebook = (): QuoteBookHooks => {
   const {
     socket,
-    bondsBy,
-    accountMaster,
-    bondMaster,
   } = React.useContext(quoteBookContext.context)
-
-  const updateQuoteBook = (): void => {
-    // TODO: an embarrising hack until I find a simple solution for guided async calls
-    setTimeout(() => {
-      socket.emit('quoteBook.snapshot');
-      socket.emit('quoteBook.subscribe');
-      setTimeout(() => {
-        socket.emit('quoteBook.unsubscribe');
-      }, 3000)
-    }, 500);
-  }
 
   const subscribeToQuotes = (): void => {
     socket.emit('quoteBook.subscribe');
@@ -68,8 +54,6 @@ export const useQuotebook = (): IUseQuoteBook => {
   }
 
   return {
-    updateQuoteBook,
-    bondsBy,
     subscribeToQuotes,
     unsubscribeFromQuotes,
     createQuote,

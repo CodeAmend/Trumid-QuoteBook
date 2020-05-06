@@ -4,7 +4,7 @@ import {
   BondsByBondIdKey,
   BondQuote,
   BondsByBids,
-  QuoteBookPayload,
+  SnapshotProps,
 } from './types';
 
 
@@ -25,7 +25,7 @@ const byPrice = sorter('price');
 
 
 
-export const getBestBidsFromReducedBonds = (bondIdKeyValues: BondsByBondIdKey): BondsByBids[] => {
+export const getBestBidsFromBondIdKeyValues = (bondIdKeyValues: BondsByBondIdKey): BondsByBids[] => {
   const topBidOffers: BondsByBids[] = [];
 
   for (let [bondId, { bondName, bid, offer }] of Object.entries(bondIdKeyValues)) {
@@ -42,10 +42,10 @@ export const getBestBidsFromReducedBonds = (bondIdKeyValues: BondsByBondIdKey): 
 }
 
 
-export const reduceBondQuotes = (props: QuoteBookPayload): BondsByBondIdKey => {
-  const { quotes, accountMaster, bondMaster } = props;
+export const combineSnapshotsToBondIdKeyValues = (props: SnapshotProps): BondsByBondIdKey => {
+  const { quoteBook, accountMaster, bondMaster } = props;
 
-  const reducedBondsByBondIdKey = quotes.reduce((acc: BondsByBondIdKey, item: BondQuote) => {
+  const reducedBondsByBondIdKey = quoteBook.reduce((acc: BondsByBondIdKey, item: BondQuote) => {
     const { qty, price, bondId } = item;
 
     const matchingAccount = accountMaster.find(account => account.id === item.accountId);

@@ -13,8 +13,8 @@ export type QuoteAction = {
   quote: BondQuote;
 }
 
-export type QuoteBookPayload = {
-  quotes: BondQuote[];
+export type SnapshotProps = {
+  quoteBook: BondQuote[];
   accountMaster: AccountMaster[];
   bondMaster: BondMaster[];
 }
@@ -90,12 +90,19 @@ export interface BondsBy {
   bids: BondsByBids[];
 }
 
-export interface IUseQuoteBook {
-  bondsBy: BondsBy;
-  updateQuoteBook: () => void; 
+export interface QuoteBookHooks {
   subscribeToQuotes: () => void;
   unsubscribeFromQuotes: () => void;
+
   createQuote: (request: CreateQuote) => void;
   replaceQuote: (request: ReplaceQuote) => void;
   cancelQuote: () => void;
+}
+
+export interface QuoteBook {
+  [key: string]: {
+    bondName: string;
+    bid: BidBuy[];
+    offer: BidBuy[];
+  }
 }

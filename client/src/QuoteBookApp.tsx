@@ -7,7 +7,6 @@ const QuoteBookApp = () => {
   return (
     <Container data-test="component-quotebookapp">
       <h1>Trumid - QuoteBook</h1>
-      <QuoteTable />
     </Container>
   );
 }
