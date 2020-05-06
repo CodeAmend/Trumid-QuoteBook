@@ -1,24 +1,30 @@
 import React, {ReactNode} from 'react';
 import io from 'socket.io-client';
-import { BondMaster, BondsByBondIdKey, BondQuote, AccountMaster } from './types'
+import { BondMaster, BondsByBondIdKey, BondsByBids, BondQuote, AccountMaster } from './types'
 
-import actions from './actions';
+import { actions } from './actions';
 import { quoteBookReducer } from './reducer';
 const socket = io('http://localhost:3000');
 
 
 interface QuoteBookContext {
   socket: any;
+  dispatch: any;
   bondsByBondId: BondsByBondIdKey;
+  bestBids: BondsByBids[];
 }
 
 // TODO: find out why I have to declare a context with typescript when I want null???
 const initialQuoteBookContext = {
   socket: null,
   bondsByBondId: {},
+  bestBids: [],
+  dispatch: null,
 };
 
 const initialReducerState = {
+  bondsByBondId: {},
+  bestBids: [],
 };
 
 export const context = React.createContext<QuoteBookContext>(initialQuoteBookContext);
@@ -67,12 +73,21 @@ export const Provider = (props: { children: ReactNode }) => {
     }
   }, [quoteBook]);
 
+  React.useEffect(() => {
+    if (Object.entries(state.bondsByBondId)) {
+      dispatch(actions.getBestBidsFromBondIdKeyValues(state.bondsByBondId));
+    }
+  }, [state.bondsByBondId]);
+
+  console.log(state)
+
+
   // React.useEffect(() => {
   //   });
   // }, []);
 
   return (
-    <context.Provider value={{ socket, ...state }} {...props} />
+    <context.Provider value={{ socket, ...state, dispatch }} {...props} />
   );
 }
 

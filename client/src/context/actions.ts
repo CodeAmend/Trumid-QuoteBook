@@ -1,4 +1,4 @@
-import { BondQuote, SnapshotProps } from './types';
+import { BondQuote, SnapshotProps, BondsByBondIdKey } from './types';
 
 
 export const actionTypes = {
@@ -7,6 +7,7 @@ export const actionTypes = {
   PROCESS_BOND_QUOTES: 'PROCESS_BOND_QUOTES',
 
   CONVERT_SNAPSHOTS: 'CONVERT_SNAPSHOTS',
+  BEST_BIDS: 'BEST_BIDS',
 
   QUOTE_CREATE: 'QUOTE_CREATE',
   QUOTE_CANCEL: 'QUOTE_CANCEL',
@@ -30,6 +31,8 @@ export const cancelQuoteWith =
 export const convertAndMarrySnapshotsToBondIdKeysWith =
   (payload: SnapshotProps) => ({ type: actionTypes.CONVERT_SNAPSHOTS, payload });
 
+export const getBestBidsFromBondIdKeyValues =
+  (payload: BondsByBondIdKey) => ({ type: actionTypes.BEST_BIDS, payload });
 
 export const actions = {
   quoteSubscribe,
@@ -38,9 +41,7 @@ export const actions = {
   createQuoteWith,
   updateQuoteWith,
   cancelQuoteWith,
-}
 
-export default {
-  actionTypes,
+  getBestBidsFromBondIdKeyValues,
   convertAndMarrySnapshotsToBondIdKeysWith,
 }

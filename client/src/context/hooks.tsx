@@ -1,4 +1,5 @@
 import React from 'react';
+import { actions } from './actions';
 import quoteBookContext from '.';
 import {
   QuoteBookHooks,
@@ -11,6 +12,7 @@ import {
 export const useQuotebook = (): QuoteBookHooks => {
   const {
     socket,
+    dispatch,
   } = React.useContext(quoteBookContext.context)
 
   const subscribeToQuotes = (): void => {
