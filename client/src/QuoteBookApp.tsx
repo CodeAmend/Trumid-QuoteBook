@@ -1,5 +1,5 @@
 import React from 'react';
-import QuoteTable from './QuoteTable';
+import AllView from './AllView';
 import styled from 'styled-components';
 import { useQuotebook } from './context/hooks';
 import BondView from './BondView';
@@ -16,7 +16,7 @@ const QuoteBookApp = () => {
   return (
     <Container>
       <h1>Trumid - QuoteBook</h1>
-      {selectedBond ? <BondView /> : <QuoteTable />}
+      {selectedBond ? <BondView /> : <AllView />}
     </Container>
   );
 }
