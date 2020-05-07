@@ -10,7 +10,6 @@ const QuoteTable = () => {
 
   if (!bestBidOffer.length) return null;
 
-
   const onGridReady = (params: any) => {
     params.api.sizeColumnsToFit();
   }
