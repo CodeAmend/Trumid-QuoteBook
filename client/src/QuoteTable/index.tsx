@@ -11,7 +11,7 @@ const QuoteTable = () => {
   if (!bestBidOffer.length) return null;
 
   const onGridReady = (params: any) => {
-    params.api.sizeColumnsToFit();
+    console.log(params)
   }
 
   const onGridSizeChanged = (params: any) => {
@@ -41,7 +41,7 @@ const QuoteTable = () => {
           rowData={bestBidOffer}
           onGridReady={onGridReady}
           onGridSizeChanged={onGridSizeChanged}
-
+          suppressScrollOnNewData={true}
       />
     </AgWraper>
   )
