@@ -12,6 +12,7 @@ const QuoteTable = () => {
 
   const onGridReady = (params: any) => {
     params.api.sizeColumnsToFit();
+    console.log(params)
   }
 
   return(
@@ -20,6 +21,7 @@ const QuoteTable = () => {
           columnDefs={columnDefs}
           rowData={bestBidOffer}
           onGridReady={onGridReady}
+
       />
     </AgWraper>
   )
