@@ -86,9 +86,6 @@ export interface BondsByBids {
 }
 
 export interface QuoteBookHooks {
-  subscribeToQuotes: () => void;
-  unsubscribeFromQuotes: () => void;
-
   createQuote: (request: CreateQuote) => void;
   replaceQuote: (request: ReplaceQuote) => void;
   cancelQuote: () => void;
