@@ -11,3 +11,14 @@
 
 
 
+#### Notes
+* Had to remove <React.StrictMode> 
+// TODO: find out why this is a thing!!!
+// https://github.com/facebook/react/issues/16295
+// had to remove React strict mode because of reducer side effect.
+
+
+
+
+#### Questions
+* It seems on "N" new quote actions, the same client can appear more than once. Should they be combined?

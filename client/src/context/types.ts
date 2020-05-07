@@ -97,6 +97,7 @@ export type DepthOfBookItem = {
   bids: QuoteFigures[];
   offers: QuoteFigures[];
 }
+
 export type DepthOfBook = {
   [key: string]: DepthOfBookItem;
 }
