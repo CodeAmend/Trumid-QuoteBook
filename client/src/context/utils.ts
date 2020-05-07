@@ -77,7 +77,7 @@ export const getBestBidsFromBondIdKeyValues = (depthOfBook: DepthOfBook): BestBi
 
   for (let [, { bondName, bids, offers, bondId }] of Object.entries(depthOfBook)) {
     // TODO: find out if we should display a bond with no quotes
-    if (bids.length || offers.length) {
+    if (bids.length || offers.length || true) {
       const bestBid: QuoteFigures = bids.sort(byPrice)[0];
       const bestOffer: QuoteFigures = offers.sort(byPrice)[0];
       topBidOffers.push({
