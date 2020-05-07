@@ -53,17 +53,17 @@ export const Provider = (props: { children: ReactNode }) => {
     })
 
     socket.on('quoteAction', ({ action, quote }: QuoteAction) => {
-      // if (action === 'N') {
-      //   dispatch(actions.createQuoteWith(quote));
-      // }
+      if (action === 'N') {
+        dispatch(actions.createQuoteWith(quote));
+      }
 
       if (action === 'U') {
         dispatch(actions.updateQuoteWith(quote));
       }
 
-      // if (action === 'C') {
-      //   dispatch(actions.cancelQuoteWith(quote));
-      // }
+      if (action === 'C') {
+        dispatch(actions.cancelQuoteWith(quote));
+      }
     });
 
     socket.emit('accountMaster.snapshot')
@@ -81,15 +81,14 @@ export const Provider = (props: { children: ReactNode }) => {
   React.useEffect(() => {
     if (quoteBook.length) {
       dispatch(actions.reconcileQuotebookWith(quoteBook));
-      console.log(quoteBook)
-      // socket.emit('quoteBook.subscribe');
-      // setTimeout(() => {
-      //   socket.emit('quoteBook.unsubscribe');
-      // }, 1 * 1000)
+      socket.emit('quoteBook.subscribe');
+      setTimeout(() => {
+        socket.emit('quoteBook.unsubscribe');
+      }, 5 * 1000)
     }
   }, [quoteBook]);
 
-  // console.log(state.depthOfBook)
+  console.log(state.depthOfBook)
 
   return (
     <context.Provider value={{ socket, ...state, dispatch }} {...props} />

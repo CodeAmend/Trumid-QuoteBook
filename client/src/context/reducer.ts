@@ -1,10 +1,11 @@
-import { ReducerState, DepthOfBook, BondMaster } from './types';
+import { ReducerState, DepthOfBook, BondMaster, BondQuote } from './types';
 import { actionTypes } from './actions';
 import {
   // combineSnapshotsToBondIdKeyValues,
   // getBestBidsFromBondIdKeyValues,
   addNewQuoteToBook,
   updateQuoteOnBook,
+  removeQuoteFromBook,
 } from './utils';
 
 
@@ -14,18 +15,16 @@ export const quoteBookReducer = (state: ReducerState, action: any): any => {
 
   switch (action.type) {
     case actionTypes.QUOTE_CREATE:
-      depthOfBook = addNewQuoteToBook(state, action.payload);
-      return { ...state, depthOfBook }
+      addNewQuoteToBook(state, action.payload);
+      return { ...state }
 
     case actionTypes.QUOTE_UPDATE:
-      // console.log(depthOfBook[action.payload.bondId])
-      depthOfBook = updateQuoteOnBook(state, action.payload);
-      // console.log(depthOfBook[action.payload.bondId])
+      updateQuoteOnBook(state, action.payload);
       return { ...state }
 
     case actionTypes.QUOTE_CANCEL:
-      console.log(action.type);
-      break;
+      removeQuoteFromBook(state, action.payload);
+      return { ...state }
 
     case actionTypes.INITIALIZE_ACCOUNT_MASTER:
       return { ...state, accountMaster: action.payload }
@@ -34,7 +33,6 @@ export const quoteBookReducer = (state: ReducerState, action: any): any => {
       return { ...state, bondMaster: action.payload }
 
     case actionTypes.INITIALIZE_DEPTH_OF_BOOK:
-      // Create book of bidId keys with bid and offer empty template 
       depthOfBook = action.payload.reduce((acc: DepthOfBook, bondItem: BondMaster) => {
         // BondId with blank attibs
         acc[bondItem.id] = {
@@ -47,6 +45,12 @@ export const quoteBookReducer = (state: ReducerState, action: any): any => {
         return acc;
       }, {});
       return { ...state, depthOfBook };
+
+    case actionTypes.RECONCILE_QUOTEBOOK:
+      action.payload.forEach((quote: BondQuote) => {
+        addNewQuoteToBook(state, quote);
+      })
+      return { ...state, }
 
     // // ADD SNAPSHOT TO BOND LIST
     // case actionTypes.CONVERT_SNAPSHOTS:
