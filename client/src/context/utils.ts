@@ -60,7 +60,7 @@ export const priceFormat = (price: number): string => {
 }
 
 export const qtyFormat = (qty: number): string => {
-  return '' + qty;
+  return (qty/1000000).toFixed(2) + 'mm';
 }
 
 const sorter = (sortType: string) => (a: any, b: any) => {
