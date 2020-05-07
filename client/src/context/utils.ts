@@ -7,11 +7,11 @@ import {
 } from './types';
 
 
-const priceFormat = (price: number): string => {
+export const priceFormat = (price: number): string => {
   return '$' + price;
 }
 
-const qtyFormat = (qty: number): string => {
+export const qtyFormat = (qty: number): string => {
   return '' + qty;
 }
 
@@ -20,7 +20,8 @@ const sorter = (sortType: string) => (a: any, b: any) => {
   if (a[sortType] < b[sortType]) return 2;
   return -1;
 }
-const byPrice = sorter('price');
+
+export const byPrice = sorter('price');
 
 
 

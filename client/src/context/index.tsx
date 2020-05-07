@@ -1,6 +1,6 @@
 import React, {ReactNode} from 'react';
 import io from 'socket.io-client';
-import { BondMaster, AccountMaster, DepthOfBook } from './types'
+import { BondMaster, QuoteAction, AccountMaster, DepthOfBook } from './types'
 
 import { actions } from './actions';
 import { quoteBookReducer } from './reducer';
@@ -11,6 +11,8 @@ interface QuoteBookContext {
   socket: any;
   dispatch: any;
   depthOfBook: DepthOfBook;
+  accountMaster: AccountMaster[];
+  bondMaster: BondMaster[];
 }
 
 // TODO: find out why I have to declare a context with typescript when I want null???
@@ -18,10 +20,14 @@ const initialQuoteBookContext = {
   socket: null,
   dispatch: null,
   depthOfBook: {},
+  accountMaster: [],
+  bondMaster: [],
 };
 
 const initialReducerState = {
-  depthOfBook: {}
+  depthOfBook: {},
+  accountMaster: [],
+  bondMaster: [],
 };
 
 export const context = React.createContext<QuoteBookContext>(initialQuoteBookContext);
@@ -29,29 +35,34 @@ export const context = React.createContext<QuoteBookContext>(initialQuoteBookCon
 export const Provider = (props: { children: ReactNode }) => {
 
   // const [quoteBook, setQuoteBook] = React.useState<BondQuote[]>([]);
-  const [accountMaster, setAccountMaster] = React.useState<AccountMaster[]>([]);
-  const [bondMaster, setBondMaster] = React.useState<BondMaster[]>([]);
+  // const [accountMaster, setAccountMaster] = React.useState<AccountMaster[]>([]);
+  // const [bondMaster, setBondMaster] = React.useState<BondMaster[]>([]);
 
   const [state, dispatch] = React.useReducer(quoteBookReducer, initialReducerState);
+  const { accountMaster, bondMaster } = state;
 
   React.useEffect(() => {
-    socket.on('accountMaster', setAccountMaster);
-    socket.on('bondMaster', setBondMaster);
+    socket.on('accountMaster', (data: AccountMaster[]) => {
+      dispatch(actions.initializeAccountMasterWith(data));
+    })
 
-//     // Quote Actions crud reducer
-//     socket.on('quoteAction', ({ action, quote }: QuoteAction) => {
-//       if (action === 'N') {
-//         dispatch(actions.createQuoteWith(quote));
-//       }
+    socket.on('bondMaster', (data: BondMaster[]) => {
+      dispatch(actions.initializeBondsMasterWith(data));
+    })
 
-//       if (action === 'U') {
-//         dispatch(actions.updateQuoteWith(quote));
-//       }
+    socket.on('quoteAction', ({ action, quote }: QuoteAction) => {
+      if (action === 'N') {
+        dispatch(actions.createQuoteWith(quote));
+      }
 
-//       if (action === 'C') {
-//         dispatch(actions.cancelQuoteWith(quote));
-//       }
-//     });
+      // if (action === 'U') {
+      //   dispatch(actions.updateQuoteWith(quote));
+      // }
+
+      // if (action === 'C') {
+      //   dispatch(actions.cancelQuoteWith(quote));
+      // }
+    });
 
     socket.emit('accountMaster.snapshot')
     socket.emit('bondMaster.snapshot')
@@ -61,9 +72,14 @@ export const Provider = (props: { children: ReactNode }) => {
   React.useEffect(() => {
     if (accountMaster.length && bondMaster.length) {
       dispatch(actions.initializeDepthOfBookWith(bondMaster));
-      // socket.emit('quoteBook.subscribe');
+      socket.emit('quoteBook.subscribe');
+      setTimeout(() => {
+        socket.emit('quoteBook.unsubscribe');
+      }, 10 * 1000)
     }
   }, [accountMaster, bondMaster]);
+
+  console.log(state.depthOfBook)
 
   return (
     <context.Provider value={{ socket, ...state, dispatch }} {...props} />

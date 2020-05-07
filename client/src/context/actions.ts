@@ -1,4 +1,4 @@
-import { BondQuote, SnapshotProps, BondsByBondIdKey, BondMaster } from './types';
+import { BondQuote, SnapshotProps, BondsByBondIdKey, AccountMaster, BondMaster } from './types';
 
 
 export const actionTypes = {
@@ -8,7 +8,9 @@ export const actionTypes = {
 
   CONVERT_SNAPSHOTS: 'CONVERT_SNAPSHOTS',
   BEST_BIDS: 'BEST_BIDS',
-  INITIALIZE_DOB: 'INITIALIZE_DOB',
+  INITIALIZE_DEPTH_OF_BOOK: 'INITIALIZE_DEPTH_OF_BOOK',
+  INITIALIZE_ACCOUNT_MASTER: 'INITIALIZE_ACCOUNT_MASTER',
+  INITIALIZE_BOND_MASTER: 'INITIALIZE_BOND_MASTER',
 
   QUOTE_CREATE: 'QUOTE_CREATE',
   QUOTE_CANCEL: 'QUOTE_CANCEL',
@@ -29,7 +31,13 @@ export const cancelQuoteWith =
   (payload: BondQuote) => ({ type: actionTypes.QUOTE_CANCEL, payload })
 
 export const initializeDepthOfBookWith =
-  (payload: BondMaster[]) => ({ type: actionTypes.INITIALIZE_DOB, payload});
+  (payload: BondMaster[]) => ({ type: actionTypes.INITIALIZE_DEPTH_OF_BOOK, payload});
+
+export const initializeAccountMasterWith =
+  (payload: AccountMaster[]) => ({ type: actionTypes.INITIALIZE_ACCOUNT_MASTER, payload});
+
+export const initializeBondsMasterWith =
+  (payload: BondMaster[]) => ({ type: actionTypes.INITIALIZE_BOND_MASTER, payload});
 
 export const convertAndMarrySnapshotsToBondIdKeysWith =
   (payload: SnapshotProps) => ({ type: actionTypes.CONVERT_SNAPSHOTS, payload });
@@ -48,4 +56,6 @@ export const actions = {
   getBestBidsFromBondIdKeyValues,
   convertAndMarrySnapshotsToBondIdKeysWith,
   initializeDepthOfBookWith,
+  initializeAccountMasterWith,
+  initializeBondsMasterWith,
 }

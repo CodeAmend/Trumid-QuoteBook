@@ -94,13 +94,14 @@ export interface QuoteBookHooks {
   cancelQuote: () => void;
 }
 
+export type DepthOfBookItem = {
+  bondId: string;
+  bondName: string | null;
+  bids: QuoteFigures[];
+  offers: QuoteFigures[];
+}
 export type DepthOfBook = {
-  [key: string]: {
-    bondId: string;
-    bondName: string | null;
-    bids: QuoteFigures[];
-    offers: QuoteFigures[];
-  };
+  [key: string]: DepthOfBookItem;
 }
 
 export interface QuoteBook {
