@@ -8,7 +8,7 @@ export const columnDefs = [
   { headerName: "Client", field: "offer.client" },
   { headerName: "qty", field: "offer.qty", valueFormatter: agQtyFormatter },
   { headerName: "Price", field: "offer.price", valueFormatter: agPriceFormatter },
-  { headerName: "Price", field: "bid.price" },
-  { headerName: "qty", field: "bid.price" },
+  { headerName: "Price", field: "bid.price", valueFormatter: agPriceFormatter  },
+  { headerName: "qty", field: "bid.price", valueFormatter: agQtyFormatter  },
   { headerName: "Client", field: "bid.client" },
 ];
