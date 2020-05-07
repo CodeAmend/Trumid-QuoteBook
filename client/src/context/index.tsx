@@ -79,13 +79,6 @@ export const Provider = (props: { children: ReactNode }) => {
     }
   }, [state.bondsByBondId]);
 
-  console.log(state)
-
-
-  // React.useEffect(() => {
-  //   });
-  // }, []);
-
   return (
     <context.Provider value={{ socket, ...state, dispatch }} {...props} />
   );

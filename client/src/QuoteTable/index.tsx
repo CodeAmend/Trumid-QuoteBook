@@ -1,11 +1,12 @@
 import React from "react"
 import { Table } from './styles';
 import { BondsByBids } from '../context/types';
-import { useQuotebook } from '../context/hooks';
+// import { useQuotebook } from '../context/hooks';
 
 
 const QuoteTable = () => {
-  const { bondsByBondId } = useQuotebook();
+  // const { bondsByBondId } = useQuotebook();
+  const bondsByBondId = { bids: [] };
 
   if (!bondsByBondId.bids.length) return null;
 
