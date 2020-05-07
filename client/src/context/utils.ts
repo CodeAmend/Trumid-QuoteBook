@@ -1,5 +1,5 @@
 import {
-  BidBuy,
+  QuoteFigures,
   BondsByBondIdKey,
   BondQuote,
   BondsByBids,
@@ -28,8 +28,8 @@ export const getBestBidsFromBondIdKeyValues = (bondIdKeyValues: BondsByBondIdKey
   const topBidOffers: BondsByBids[] = [];
 
   for (let [bondId, { bondName, bid, offer }] of Object.entries(bondIdKeyValues)) {
-    const bestBid: BidBuy = bid.sort(byPrice)[0];
-    const bestOffer: BidBuy = offer.sort(byPrice)[0];
+    const bestBid: QuoteFigures = bid.sort(byPrice)[0];
+    const bestOffer: QuoteFigures = offer.sort(byPrice)[0];
     topBidOffers.push({
       bondName,
       bondId,

@@ -64,8 +64,7 @@ export interface CancelQuote {
   quoteId: string;
 }
 
-// TODO change to quote
-export type BidBuy = {
+export type QuoteFigures = {
   qty: string;
   price: string;
   client: string;
@@ -74,16 +73,16 @@ export type BidBuy = {
 export type BondsByBondIdKey = {
   [key: string]: {
     bondName: string;
-    bid: BidBuy[];
-    offer: BidBuy[];
+    bid: QuoteFigures[];
+    offer: QuoteFigures[];
   }
 }
 
 export interface BondsByBids {
   bondName: string;
   bondId: string;
-  bid: BidBuy; 
-  offer: BidBuy; 
+  bid: QuoteFigures; 
+  offer: QuoteFigures; 
 }
 
 export interface QuoteBookHooks {
@@ -95,10 +94,19 @@ export interface QuoteBookHooks {
   cancelQuote: () => void;
 }
 
+export type DepthOfBook = {
+  [key: string]: {
+    bondId: string;
+    bondName: string | null;
+    bids: QuoteFigures[];
+    offers: QuoteFigures[];
+  };
+}
+
 export interface QuoteBook {
   [key: string]: {
     bondName: string;
-    bid: BidBuy[];
-    offer: BidBuy[];
+    bid: QuoteFigures[];
+    offer: QuoteFigures[];
   }
 }

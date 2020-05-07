@@ -1,3 +1,4 @@
+import { DepthOfBook, BondMaster } from './types';
 import { actionTypes } from './actions';
 import {
   combineSnapshotsToBondIdKeyValues,
@@ -7,7 +8,24 @@ import {
 
 export const quoteBookReducer = (state: any, action: any): any => {
   switch (action.type) {
-    // TODO: DEPTH_OF_BOOK
+    case actionTypes.INITIALIZE_DOB:
+      // Create book of bidId keys with bid and offer empty template 
+      const depthOfBook = action.payload.reduce((acc: DepthOfBook, bondItem: BondMaster) => {
+        const name = bondItem.id;
+
+        // BondId with blank attibs
+        acc[name] = {
+          bondId: name,
+          bondName: null,
+          bids: [],
+          offers: [],
+        };
+
+        return acc;
+      }, {});
+      return { depthOfBook };
+
+    // ADD SNAPSHOT TO BOND LIST
     case actionTypes.CONVERT_SNAPSHOTS:
       const { accountMaster, bondMaster, quoteBook } = action.payload;
       const bondsByBondId = combineSnapshotsToBondIdKeyValues({

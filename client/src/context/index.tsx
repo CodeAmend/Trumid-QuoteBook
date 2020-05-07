@@ -1,6 +1,6 @@
 import React, {ReactNode} from 'react';
 import io from 'socket.io-client';
-import { BondMaster, BondsByBondIdKey, BondsByBids, BondQuote, AccountMaster } from './types'
+import { BondMaster, AccountMaster, DepthOfBook } from './types'
 
 import { actions } from './actions';
 import { quoteBookReducer } from './reducer';
@@ -10,74 +10,60 @@ const socket = io('http://localhost:3000');
 interface QuoteBookContext {
   socket: any;
   dispatch: any;
-  bondsByBondId: BondsByBondIdKey;
-  bestBids: BondsByBids[];
+  depthOfBook: DepthOfBook;
 }
 
 // TODO: find out why I have to declare a context with typescript when I want null???
 const initialQuoteBookContext = {
   socket: null,
-  bondsByBondId: {},
-  bestBids: [],
   dispatch: null,
+  depthOfBook: {},
 };
 
 const initialReducerState = {
-  bondsByBondId: {},
-  bestBids: [],
+  depthOfBook: {}
 };
 
 export const context = React.createContext<QuoteBookContext>(initialQuoteBookContext);
 
 export const Provider = (props: { children: ReactNode }) => {
 
-  const [quoteBook, setQuoteBook] = React.useState<BondQuote[]>([]);
+  // const [quoteBook, setQuoteBook] = React.useState<BondQuote[]>([]);
   const [accountMaster, setAccountMaster] = React.useState<AccountMaster[]>([]);
   const [bondMaster, setBondMaster] = React.useState<BondMaster[]>([]);
 
   const [state, dispatch] = React.useReducer(quoteBookReducer, initialReducerState);
 
-  // Initialize socketOn and emit initial snapshots
   React.useEffect(() => {
-    // socket.on('quoteAction', ({ action, quote }: QuoteAction) => {
-    //   if (action === 'N') dispatchCrud(actions.createQuoteWith(quote));
-    //   if (action === 'U') dispatchCrud(actions.updateQuoteWith(quote));
-    //   if (action === 'C') dispatchCrud(actions.cancelQuoteWith(quote));
-    // });
-
-    // socket.on('quoteAccepted', console.log);
-    // socket.on('quoteRejected', console.log);
-
     socket.on('accountMaster', setAccountMaster);
     socket.on('bondMaster', setBondMaster);
-    socket.on('quoteBook', setQuoteBook);
+
+//     // Quote Actions crud reducer
+//     socket.on('quoteAction', ({ action, quote }: QuoteAction) => {
+//       if (action === 'N') {
+//         dispatch(actions.createQuoteWith(quote));
+//       }
+
+//       if (action === 'U') {
+//         dispatch(actions.updateQuoteWith(quote));
+//       }
+
+//       if (action === 'C') {
+//         dispatch(actions.cancelQuoteWith(quote));
+//       }
+//     });
 
     socket.emit('accountMaster.snapshot')
     socket.emit('bondMaster.snapshot')
-  }, [])
+  }, []);
 
-  // Listen for finished master snapshots and emit quotebook
+  // Master Tables Loaded 
   React.useEffect(() => {
     if (accountMaster.length && bondMaster.length) {
-      socket.emit('quoteBook.snapshot');
+      dispatch(actions.initializeDepthOfBookWith(bondMaster));
+      // socket.emit('quoteBook.subscribe');
     }
   }, [accountMaster, bondMaster]);
-
-  React.useEffect(() => {
-    if (quoteBook.length) {
-      dispatch(actions.convertAndMarrySnapshotsToBondIdKeysWith({
-        quoteBook,
-        accountMaster,
-        bondMaster
-      }));
-    }
-  }, [quoteBook]);
-
-  React.useEffect(() => {
-    if (Object.entries(state.bondsByBondId)) {
-      dispatch(actions.getBestBidsFromBondIdKeyValues(state.bondsByBondId));
-    }
-  }, [state.bondsByBondId]);
 
   return (
     <context.Provider value={{ socket, ...state, dispatch }} {...props} />
@@ -88,3 +74,24 @@ export default {
   context,
   Provider,
 }
+
+  // React.useEffect(() => {
+  //   if (quoteBook.length) {
+  //     dispatch(actions.convertAndMarrySnapshotsToBondIdKeysWith({
+  //       quoteBook,
+  //       accountMaster,
+  //       bondMaster
+  //     }));
+  //   }
+  // }, [quoteBook]);
+
+  // React.useEffect(() => {
+  //   if (Object.entries(state.bondsByBondId)) {
+  //     dispatch(actions.getBestBidsFromBondIdKeyValues(state.bondsByBondId));
+  //   }
+  // }, [state.bondsByBondId]);
+
+
+
+// socket.on('quoteAccepted', console.log);
+// socket.on('quoteRejected', console.log);

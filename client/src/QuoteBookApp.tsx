@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container } from '@material-ui/core';
-import QuoteTable from './QuoteTable';
+// import QuoteTable from './QuoteTable';
 
 
 const QuoteBookApp = () => {
