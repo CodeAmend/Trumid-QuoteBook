@@ -1,21 +1,9 @@
 import styled from 'styled-components';
 
 
+export const AgWraper = styled.section`
+  width: 1400px;
+  height: 100vh;
+`;
 export const Table = styled.table`
-  width: 100%; 
-  border-collapse: collapse; 
-
-  tr:nth-of-type(odd) { 
-    background: #eee; 
-  }
-  th { 
-    background: #333; 
-    color: white; 
-    font-weight: bold; 
-  }
-  td, th { 
-    padding: 6px; 
-    border: 1px solid #ccc; 
-    text-align: left; 
-  }
 `;

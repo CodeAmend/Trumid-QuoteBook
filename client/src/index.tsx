@@ -5,6 +5,9 @@ import App from './QuoteBookApp';
 import { Provider } from './context';
 import * as serviceWorker from './serviceWorker';
 
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-balham-dark.css';
+
 
 // TODO: find out why this is a thing!!!
 // https://github.com/facebook/react/issues/16295
