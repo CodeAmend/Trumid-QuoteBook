@@ -23,7 +23,8 @@ const sorter = (sortType: string) => (a: any, b: any) => {
 
 export const byPrice = sorter('price');
 
-// TODO: These mutate objects, should they?
+
+
 export const addNewQuoteToBook = (state: ReducerState, quote: BondQuote): DepthOfBook => {
   const { accountMaster, depthOfBook: book } = state;
   const { qty, price, bondId, accountId } = quote;
