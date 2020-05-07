@@ -11,6 +11,7 @@ import {
 export const useQuotebook = (): QuoteBookHooks => {
   const {
     socket,
+    depthOfBook,
   } = React.useContext(quoteBookContext.context)
 
   const createQuote = (request: CreateQuote) => {
@@ -49,6 +50,7 @@ export const useQuotebook = (): QuoteBookHooks => {
     createQuote,
     replaceQuote,
     cancelQuote,
+    depthOfBook,
   }
 }
 

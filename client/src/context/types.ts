@@ -89,6 +89,7 @@ export interface QuoteBookHooks {
   createQuote: (request: CreateQuote) => void;
   replaceQuote: (request: ReplaceQuote) => void;
   cancelQuote: () => void;
+  depthOfBook: DepthOfBook;
 }
 
 export type DepthOfBookItem = {

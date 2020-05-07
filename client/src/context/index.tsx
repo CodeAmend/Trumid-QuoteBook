@@ -79,9 +79,6 @@ export const Provider = (props: { children: ReactNode }) => {
     if (quoteBook.length) {
       dispatch(actions.reconcileQuotebookWith(quoteBook));
       socket.emit('quoteBook.subscribe');
-      setTimeout(() => {
-        socket.emit('quoteBook.unsubscribe');
-      }, 10 * 1000)
     }
   }, [quoteBook]);
 
