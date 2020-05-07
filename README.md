@@ -17,7 +17,9 @@
 // https://github.com/facebook/react/issues/16295
 // had to remove React strict mode because of reducer side effect.
 
-
+* Ag-grid was a pain to install, it took a bit to track down the issue.
+https://stackoverflow.com/questions/47326640/ag-grid-react-crashing-on-basic-component-import-missing-react-dom-factories
+I found this stackoverflow and needed to install a missing dependency that was removed in a previous react version `react-dom-factories`
 
 
 #### Questions
