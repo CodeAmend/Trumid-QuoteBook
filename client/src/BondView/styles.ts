@@ -19,4 +19,11 @@ export const Header = styled.header`
   h1 {
     font-size: 2rem;
   }
+
+  button {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    margin-right: 1rem;
+  }
 `;

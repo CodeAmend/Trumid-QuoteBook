@@ -102,19 +102,28 @@ export type ReducerState = {
   bondMaster: BondMaster[];
 }
 
+export interface QuoteBookContext {
+  socket: any;
+  dispatch: any;
+  depthOfBook: DepthOfBook;
+  accountMaster: AccountMaster[];
+  bondMaster: BondMaster[];
+  selectedBond: string;
+  setSelectedBond: (boindId: string) => void;
+}
+
+export type BondViewProps = {
+  bid: QuoteFigures;
+  offer: QuoteFigures;
+}
+
 export interface QuoteBookHooks {
   createQuote: (request: CreateQuote) => void;
   replaceQuote: (request: ReplaceQuote) => void;
   cancelQuote: () => void;
+  selectedBond: string;
+  setSelectedBond: (bondId: string) => void;
   depthOfBook: DepthOfBook;
   bestBidOffer: BestBidOffer[];
+  selectedBondData: BondViewProps[];
 }
-
-
-// export interface QuoteBook { [key: string]: {
-//     bondName: string;
-//     bid: QuoteFigures[];
-//     offer: QuoteFigures[];
-//   }
-// }
-

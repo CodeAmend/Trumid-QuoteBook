@@ -90,3 +90,21 @@ export const getBestBidsFromBondIdKeyValues = (depthOfBook: DepthOfBook): BestBi
   }
   return topBidOffers; 
 }
+
+export const convertBondDataToRowData = (depthOfBook: DepthOfBook, bondId: string): BestBidOffer[] => {
+  if (!bondId) return []; 
+
+  const { bondName, bids, offers, } = depthOfBook[bondId];
+  const detailLength = Math.max(bids.length, offers.length);
+
+  let bondData: BestBidOffer[] = [];
+  for (let i = 0; i < detailLength; i++) {
+    bondData.push({
+      bondId,
+      bondName,
+      bid: bids[i],
+      offer: offers[i],
+    });
+  }
+  return bondData;
+}

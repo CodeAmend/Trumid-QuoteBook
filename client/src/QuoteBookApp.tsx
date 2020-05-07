@@ -1,9 +1,9 @@
 import React from 'react';
 import QuoteTable from './QuoteTable';
 import styled from 'styled-components';
+import { useQuotebook } from './context/hooks';
+import BondView from './BondView';
 
-import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 
 const Container = styled.section`
   display: flex;
@@ -12,10 +12,11 @@ const Container = styled.section`
 `;
 
 const QuoteBookApp = () => {
+  const { selectedBond } = useQuotebook();
   return (
     <Container>
       <h1>Trumid - QuoteBook</h1>
-      <QuoteTable />
+      {selectedBond ? <BondView /> : <QuoteTable />}
     </Container>
   );
 }

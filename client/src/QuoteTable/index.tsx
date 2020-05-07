@@ -1,50 +1,34 @@
 import React from "react"
-import { AgGridReact } from 'ag-grid-react';
 import { useQuotebook } from '../context/hooks';
-import { AgWraper } from './styles';
-import { defaultColumnDefs, columnDefs } from './columnDefs';
+
+import Table from '../Table';
+import { columnDefs } from './columnDefs';
+
+import { ViewWrapper, Header } from './styles';
 
 
-const QuoteTable = () => {
-  const { bestBidOffer } = useQuotebook();
+
+const AllView = () => {
+  const { bestBidOffer, setSelectedBond } = useQuotebook();
 
   if (!bestBidOffer.length) return null;
 
-  const onGridReady = (params: any) => {
-    console.log(params)
-  }
-
-  const onGridSizeChanged = (params: any) => {
-    var gridWidth = document.getElementById('grid-wrapper')?.offsetWidth || 0;
-    const columnsToShow: any = [];
-    const columnsToHide: any = [];
-    let totalColsWidth = 0;
-    const allColumns = params.columnApi.getAllColumns();
-    for (let i = 0; i < allColumns.length; i++) {
-      const column = allColumns[i];
-      totalColsWidth += column.getMinWidth();
-      if (totalColsWidth > gridWidth) {
-        columnsToHide.push(column.colId);
-      } else {
-        columnsToShow.push(column.colId);
-      }
-    }
-    params.columnApi.setColumnsVisible(columnsToShow, true);
-    params.api.sizeColumnsToFit();
+  const onRowClicked = ({ data }: any) => {
+    setSelectedBond(data.bondId)
   }
 
   return(
-    <AgWraper className="ag-theme-balham-dark">
-      <AgGridReact
-          columnDefs={columnDefs}
-          defaultColDef={defaultColumnDefs}
-          rowData={bestBidOffer}
-          onGridReady={onGridReady}
-          onGridSizeChanged={onGridSizeChanged}
-          suppressScrollOnNewData={true}
+    <ViewWrapper>
+      <Header>
+        <h1>All Bonds View</h1>
+      </Header>
+      <Table
+        columnDefs={columnDefs}
+        rowData={bestBidOffer}
+        onRowClicked={onRowClicked}
       />
-    </AgWraper>
+    </ViewWrapper>
   )
 }
 
-export default QuoteTable;
+export default AllView;
