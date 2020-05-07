@@ -1,7 +1,7 @@
 import { priceFormat, qtyFormat } from '../context/utils';
 
-const agQtyFormatter = (params: { value: number }): string => qtyFormat(params.value);
-const agPriceFormatter = (params: { value: number }): string => priceFormat(params.value);
+const agQtyFormatter = ({ value }: { value: number }): string => value ? qtyFormat(value) : '';
+const agPriceFormatter = ({ value }: { value: number }): string => value ? priceFormat(value) : '';
 
 export const columnDefs = [
   { headerName: "Bond", field: "bondName" },
