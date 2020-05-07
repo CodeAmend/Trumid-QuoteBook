@@ -64,6 +64,7 @@ export interface CancelQuote {
   quoteId: string;
 }
 
+// TODO change to quote
 export type BidBuy = {
   qty: string;
   price: string;
