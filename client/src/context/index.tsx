@@ -1,6 +1,6 @@
 import React, {ReactNode} from 'react';
 import io from 'socket.io-client';
-import { BondMaster, QuoteAction, AccountMaster, DepthOfBook } from './types'
+import { BondQuote, BondMaster, QuoteAction, AccountMaster, DepthOfBook } from './types'
 
 import { actions } from './actions';
 import { quoteBookReducer } from './reducer';
@@ -34,7 +34,7 @@ export const context = React.createContext<QuoteBookContext>(initialQuoteBookCon
 
 export const Provider = (props: { children: ReactNode }) => {
 
-  // const [quoteBook, setQuoteBook] = React.useState<BondQuote[]>([]);
+  const [quoteBook, setQuoteBook] = React.useState<BondQuote[]>([]);
   // const [accountMaster, setAccountMaster] = React.useState<AccountMaster[]>([]);
   // const [bondMaster, setBondMaster] = React.useState<BondMaster[]>([]);
 
@@ -42,6 +42,8 @@ export const Provider = (props: { children: ReactNode }) => {
   const { accountMaster, bondMaster } = state;
 
   React.useEffect(() => {
+    socket.on('quoteBook', setQuoteBook);
+
     socket.on('accountMaster', (data: AccountMaster[]) => {
       dispatch(actions.initializeAccountMasterWith(data));
     })
@@ -51,13 +53,13 @@ export const Provider = (props: { children: ReactNode }) => {
     })
 
     socket.on('quoteAction', ({ action, quote }: QuoteAction) => {
-      if (action === 'N') {
-        dispatch(actions.createQuoteWith(quote));
-      }
-
-      // if (action === 'U') {
-      //   dispatch(actions.updateQuoteWith(quote));
+      // if (action === 'N') {
+      //   dispatch(actions.createQuoteWith(quote));
       // }
+
+      if (action === 'U') {
+        dispatch(actions.updateQuoteWith(quote));
+      }
 
       // if (action === 'C') {
       //   dispatch(actions.cancelQuoteWith(quote));
@@ -72,14 +74,22 @@ export const Provider = (props: { children: ReactNode }) => {
   React.useEffect(() => {
     if (accountMaster.length && bondMaster.length) {
       dispatch(actions.initializeDepthOfBookWith(bondMaster));
-      socket.emit('quoteBook.subscribe');
-      setTimeout(() => {
-        socket.emit('quoteBook.unsubscribe');
-      }, 10 * 1000)
+      socket.emit('quoteBook.snapshot');
     }
   }, [accountMaster, bondMaster]);
 
-  console.log(state.depthOfBook)
+  React.useEffect(() => {
+    if (quoteBook.length) {
+      dispatch(actions.reconcileQuotebookWith(quoteBook));
+      console.log(quoteBook)
+      // socket.emit('quoteBook.subscribe');
+      // setTimeout(() => {
+      //   socket.emit('quoteBook.unsubscribe');
+      // }, 1 * 1000)
+    }
+  }, [quoteBook]);
+
+  // console.log(state.depthOfBook)
 
   return (
     <context.Provider value={{ socket, ...state, dispatch }} {...props} />

@@ -1,4 +1,10 @@
-import { BondQuote, SnapshotProps, BondsByBondIdKey, AccountMaster, BondMaster } from './types';
+import {
+  BondQuote,
+  SnapshotProps,
+  BondsByBondIdKey,
+  AccountMaster,
+  BondMaster,
+} from './types';
 
 
 export const actionTypes = {
@@ -11,6 +17,7 @@ export const actionTypes = {
   INITIALIZE_DEPTH_OF_BOOK: 'INITIALIZE_DEPTH_OF_BOOK',
   INITIALIZE_ACCOUNT_MASTER: 'INITIALIZE_ACCOUNT_MASTER',
   INITIALIZE_BOND_MASTER: 'INITIALIZE_BOND_MASTER',
+  RECONCILE_QUOTEBOOK: 'RECONCILE_QUOTEBOOK',
 
   QUOTE_CREATE: 'QUOTE_CREATE',
   QUOTE_CANCEL: 'QUOTE_CANCEL',
@@ -32,6 +39,9 @@ export const cancelQuoteWith =
 
 export const initializeDepthOfBookWith =
   (payload: BondMaster[]) => ({ type: actionTypes.INITIALIZE_DEPTH_OF_BOOK, payload});
+
+export const reconcileQuotebookWith =
+  (payload: BondQuote[]) => ({ type: actionTypes.RECONCILE_QUOTEBOOK , payload })
 
 export const initializeAccountMasterWith =
   (payload: AccountMaster[]) => ({ type: actionTypes.INITIALIZE_ACCOUNT_MASTER, payload});
@@ -58,4 +68,5 @@ export const actions = {
   initializeDepthOfBookWith,
   initializeAccountMasterWith,
   initializeBondsMasterWith,
+  reconcileQuotebookWith,
 }

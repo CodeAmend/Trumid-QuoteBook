@@ -1,3 +1,21 @@
+export const mockDepthOfBook = {
+  "oneBidBond":{"bondId":"oneBidBond","bondName":"SHD 6.929 1/30/2042","bids":[
+    { client: "MBA",
+    price: "$25.75",
+    qty: "9303000" }
+  ],"offers":[]},
+  "oneOfferBond":{"bondId":"oneOfferBond","bondName":"HNM 2.900 12/16/2024","bids":[],"offers":[{
+    client: "MBA",
+    price: "$50.50",
+    qty: "9303000" }
+  ]},
+  "emptyBond":{"bondId":"emptyBond","bondName":"FMXY 7.884 2/4/2036","bids":[],"offers":[]},
+}
+
+
+export const mockAccountMaster = [{ id: 0, name: 'MBA'}];
+
+
 export const quoteBook = [
   {"bondId":"0DD2XUU","accountId":0,"side":"S","price":106.5625,"qty":5515000,"id":"1abf4b328414dddc9b3e8b5a7834da985460064a","sequence":7,"createdAt":"2020-05-06T02:34:05.769Z","updatedAt":"2020-05-06T02:45:57.437Z","reqId":"79bee5ad16e585d74a2069dd612bb46b0252356b"},
   {"bondId":"E52400Z","accountId":0,"side":"S","price":104.875,"qty":5709000,"id":"2c63386f41b30dd8266a9198c81fec33d4921af7","sequence":7,"createdAt":"2020-05-06T02:37:05.023Z","updatedAt":"2020-05-06T02:47:08.750Z","reqId":"fc45883ebc16bcc0cccd10e3881898a7fff2cc8f"},

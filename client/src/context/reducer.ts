@@ -1,52 +1,27 @@
-import { QuoteFigures, DepthOfBook, AccountMaster, BondMaster, BondQuote } from './types';
+import { ReducerState, DepthOfBook, BondMaster } from './types';
 import { actionTypes } from './actions';
 import {
   // combineSnapshotsToBondIdKeyValues,
   // getBestBidsFromBondIdKeyValues,
-  priceFormat,
-  qtyFormat,
-  byPrice,
+  addNewQuoteToBook,
+  updateQuoteOnBook,
 } from './utils';
 
 
-type ReducerState = {
-  depthOfBook: DepthOfBook;
-  accountMaster: AccountMaster[];
-  bondMaster: BondMaster[];
-}
-
-const setupNewQuoteField = (state: ReducerState, quote: BondQuote): DepthOfBook => {
-  const { accountMaster, depthOfBook: book } = state;
-  const { qty, price, bondId, accountId } = quote;
-
-  const client = accountMaster[accountId].name;
-
-  const item = book[bondId];
-
-  const figures: QuoteFigures = { client, qty: qtyFormat(qty), price: priceFormat(price) };
-
-  if (quote.side === 'B') {
-    item.bids.push(figures)
-    item.bids = item.bids.sort(byPrice)
-  } else {
-    item.offers.push(figures);
-  }
-  
-  return book;
-}
-
-export const quoteBookReducer = (state: any, action: any): any => {
-  let depthOfBook: DepthOfBook = state.depthBook;
+export const quoteBookReducer = (state: ReducerState, action: any): any => {
+  let depthOfBook: DepthOfBook = state.depthOfBook;
 
 
   switch (action.type) {
     case actionTypes.QUOTE_CREATE:
-      depthOfBook = setupNewQuoteField(state, action.payload);
+      depthOfBook = addNewQuoteToBook(state, action.payload);
       return { ...state, depthOfBook }
 
     case actionTypes.QUOTE_UPDATE:
-      console.log(action.type);
-      break;
+      // console.log(depthOfBook[action.payload.bondId])
+      depthOfBook = updateQuoteOnBook(state, action.payload);
+      // console.log(depthOfBook[action.payload.bondId])
+      return { ...state }
 
     case actionTypes.QUOTE_CANCEL:
       console.log(action.type);

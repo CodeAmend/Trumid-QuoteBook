@@ -4,8 +4,45 @@ import {
   BondQuote,
   BondsByBids,
   SnapshotProps,
+  ReducerState,
+  DepthOfBook,
 } from './types';
 
+export const addNewQuoteToBook = (state: ReducerState, quote: BondQuote): DepthOfBook => {
+  const { accountMaster, depthOfBook: book } = state;
+  const { qty, price, bondId, accountId } = quote;
+  const client = accountMaster[accountId].name;
+  const item = book[bondId];
+  const figures: QuoteFigures = { client, qty: qtyFormat(qty), price: priceFormat(price) };
+
+  if (quote.side === 'B') {
+    item.bids.push(figures)
+    item.bids = item.bids.sort(byPrice)
+  } else { // Side === 'S'
+    item.offers.push(figures);
+  }
+  return book;
+}
+
+export const updateQuoteOnBook = (state: ReducerState, quote: BondQuote): DepthOfBook => {
+  const { accountMaster, depthOfBook: book } = state;
+  const { qty, price, bondId, accountId } = quote;
+  const client = accountMaster[accountId].name;
+  const item = book[bondId];
+
+  const figures: QuoteFigures = { client, qty: qtyFormat(qty), price: priceFormat(price) };
+
+  console.log(book[quote.bondId])
+  if (quote.side === 'B') {
+    item.bids.map(bid => bid.client === client ? figures : bid);
+    item.bids = item.bids.sort(byPrice)
+  } else { // Side === 'S'
+    item.offers.map(bid => bid.client === client ? figures : bid);
+    item.offers = item.offers.sort(byPrice)
+  }
+  console.log(book[quote.bondId])
+  return book;
+}
 
 export const priceFormat = (price: number): string => {
   return '$' + price;

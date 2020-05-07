@@ -109,3 +109,9 @@ export interface QuoteBook {
     offer: QuoteFigures[];
   }
 }
+
+export type ReducerState = {
+  depthOfBook: DepthOfBook;
+  accountMaster: AccountMaster[];
+  bondMaster: BondMaster[];
+}
