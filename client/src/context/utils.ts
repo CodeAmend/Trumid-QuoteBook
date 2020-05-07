@@ -24,13 +24,12 @@ const sorter = (sortType: string) => (a: any, b: any) => {
 export const byPrice = sorter('price');
 
 
-
 export const addNewQuoteToBook = (state: ReducerState, quote: BondQuote): DepthOfBook => {
   const { accountMaster, depthOfBook: book } = state;
   const { qty, price, bondId, accountId } = quote;
   const client = accountMaster[accountId].name;
   const item = book[bondId];
-  const figures: QuoteFigures = { client, qty: qtyFormat(qty), price: priceFormat(price) };
+  const figures: QuoteFigures = { client, qty, price };
 
   if (quote.side === 'B') {
     item.bids.push(figures)
@@ -42,21 +41,21 @@ export const addNewQuoteToBook = (state: ReducerState, quote: BondQuote): DepthO
 }
 
 export const updateQuoteOnBook = (state: ReducerState, quote: BondQuote): DepthOfBook => {
-  const { accountMaster, depthOfBook: book } = state;
+  const { accountMaster, depthOfBook } = state;
   const { qty, price, bondId, accountId } = quote;
   const client = accountMaster[accountId].name;
-  const item = book[bondId];
+  const item = depthOfBook[bondId];
 
-  const figures: QuoteFigures = { client, qty: qtyFormat(qty), price: priceFormat(price) };
+  const figures: QuoteFigures = { client, qty, price };
 
+  // TODO: Refactor this messy code!!!
   if (quote.side === 'B') {
-    item.bids.map(bid => bid.client === client ? figures : bid);
-    item.bids = item.bids.sort(byPrice)
+    item.bids = item.bids.map(bid => bid.client === client ? figures : bid);
   } else { // Side === 'S'
-    item.offers.map(bid => bid.client === client ? figures : bid);
+    item.offers = item.offers.map(bid => bid.client === client ? figures : bid);
     item.offers = item.offers.sort(byPrice)
   }
-  return book;
+  return depthOfBook;
 }
 
 export const removeQuoteFromBook = (state: ReducerState, quote: BondQuote) => {

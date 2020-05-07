@@ -1,5 +1,5 @@
-import { DepthOfBook, ReducerState, BondQuote } from './types';
-import { addNewQuoteToBook } from './utils';
+import { DepthOfBookItem, QuoteFigures, DepthOfBook, ReducerState, BondQuote } from './types';
+import { addNewQuoteToBook, updateQuoteOnBook } from './utils';
 
 
 enum Sides {
@@ -12,7 +12,7 @@ type MockQuote = {
   price: number;
   qty: number;
   bondId: "bond1" | "bond2";
-  accountId: 0 | 1;
+  accountId: 0 | 1 | 2;
 }
 
 const mockBondMaster = [
@@ -24,6 +24,7 @@ const mockBondMaster = [
 const mockAccountMaster = [
   { id: 0, name: "AB" },
   { id: 1, name: "XY" },
+  { id: 2, name: "ZZ" },
 ]
 
 const getNewMockDepthOfBook = () => JSON.parse(JSON.stringify(({
@@ -67,9 +68,8 @@ export const getMockeQuote = ({ bondId, accountId, side, price, qty }: MockQuote
   updatedAt: "2020-05-07T03:26:24.062Z",
 });
 
-describe("Add Bid/Offer to depthBook", () => {
+describe("addNewQuoteToBook", () => {
   let state: ReducerState;
-  let quote1: BondQuote;
 
   beforeEach(() => {
     state = {
@@ -77,8 +77,6 @@ describe("Add Bid/Offer to depthBook", () => {
       bondMaster: mockBondMaster,
       depthOfBook: getNewMockDepthOfBook(),
     }
-
-
   });
 
   describe("buy", () => {
@@ -181,3 +179,89 @@ describe("Add Bid/Offer to depthBook", () => {
     it("combines existing client bond", () => {})
   });
 });
+
+describe("updateQuoteOnBook", () => {
+  let state: ReducerState;
+
+  beforeEach(() => {
+    state = {
+      accountMaster: mockAccountMaster,
+      bondMaster: mockBondMaster,
+      depthOfBook: getNewMockDepthOfBook(),
+    }
+  });
+
+  describe("buy", () => {
+    let mockDepthOfBook: DepthOfBook;
+    let testDepthOfBook: DepthOfBook;
+    let quote1: BondQuote;
+    let quote2: BondQuote;
+
+    beforeEach(() => {
+      // BUY
+      mockDepthOfBook = getNewMockDepthOfBook();
+      quote1 = getMockeQuote({
+        bondId: "bond1",
+        accountId: 2,
+        side: Sides.BUY,
+        price: 10,
+        qty: 1000000,
+      });
+
+      quote2 = getMockeQuote({
+        bondId: "bond2",
+        accountId: 1,
+        side: Sides.BUY,
+        price: 10,
+        qty: 10000000,
+      });
+    });
+
+    const getQuoteMasterClientName = (quote: BondQuote) => {
+      return state.accountMaster.find(am => am.id === quote.accountId);
+    }
+    
+    const findClientNameInBond = (clientName: string, bond: DepthOfBookItem, typeName?: string) => {
+      return bond[typeName || "bids"].find((b: QuoteFigures) => b.client === clientName);
+    }
+
+
+    it("update does nothing when quote doesnt", () => {
+      // Bond 2 only has bids and no offers
+      const bond2 = mockDepthOfBook["bond2"];
+      // QUOTE 1
+      const quote1Client = getQuoteMasterClientName(quote1);
+      
+      const hasMatchingClient = findClientNameInBond(quote1Client?.name || '', bond2)
+      expect(hasMatchingClient).toBeUndefined()
+
+      // Prove nothing hapens during update
+      const testDepthOfBook = updateQuoteOnBook(state, quote1);
+      const testBond2 = testDepthOfBook['bond2'];
+      expect(testBond2.bids).toEqual(bond2.bids);
+    });
+
+    it("update changes matching client", () => {
+      const bond2 = mockDepthOfBook["bond2"];
+
+      // Get master account client
+      const quote2Client = getQuoteMasterClientName(quote2);
+      expect(quote2Client).toBeTruthy();
+      
+      const matchingBondClient = findClientNameInBond(quote2Client?.name || '', bond2);
+      expect(matchingBondClient).toBeTruthy()
+
+      // Prove update hapens
+      const testDepthOfBook = updateQuoteOnBook(state, quote2);
+      const testBond2 = testDepthOfBook['bond2'];
+      expect(testBond2.bids).not.toEqual(bond2.bids);
+      
+      const testBondMatchingClient = testDepthOfBook['bond2'].bids
+        .find(b => b.client === quote2Client?.name)
+
+      expect(testBondMatchingClient).toEqual({ client: 'XY', price: 10, qty: 10000000 })
+    });
+
+  });
+});
+

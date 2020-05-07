@@ -65,8 +65,8 @@ export interface CancelQuote {
 }
 
 export type QuoteFigures = {
-  qty: string;
-  price: string;
+  qty: number;
+  price: number;
   client: string;
 }
 
