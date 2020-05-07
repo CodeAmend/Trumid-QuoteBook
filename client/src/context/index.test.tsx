@@ -16,12 +16,12 @@ import { useQuotebook } from './hooks';
 
 describe('QuoteBook Context', () => {
   // I do not want to instantiate useContext, so I mock a context;
-  React.useContext = jest.fn().mockReturnValue({ socket, accountMasterSnapshot: [] })
+  // React.useContext = jest.fn().mockReturnValue({ socket, accountMasterSnapshot: [] })
 
-  let hooks: IUseQuoteBook;
-  beforeEach(() => {
-    hooks = useQuotebook();
-  });
+  // let hooks: IUseQuoteBook;
+  // beforeEach(() => {
+  //   hooks = useQuotebook();
+  // });
 
 
   test('accountMasterSnapshot', () => {

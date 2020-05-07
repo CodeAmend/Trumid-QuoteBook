@@ -11,7 +11,6 @@ const Container = styled.section`
   align-items: center;
 `;
 
-
 const QuoteBookApp = () => {
   return (
     <Container>
