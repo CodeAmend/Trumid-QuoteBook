@@ -7,6 +7,22 @@ import {
 } from './types';
 
 
+export const priceFormat = (price: number): string => {
+  return '$' + price;
+}
+
+export const qtyFormat = (qty: number): string => {
+  return (qty/1000000).toFixed(2) + 'mm';
+}
+
+const sorter = (sortType: string) => (a: any, b: any) => {
+  if (a[sortType] > b[sortType]) return 1;
+  if (a[sortType] < b[sortType]) return 2;
+  return -1;
+}
+
+export const byPrice = sorter('price');
+
 // TODO: These mutate objects, should they?
 export const addNewQuoteToBook = (state: ReducerState, quote: BondQuote): DepthOfBook => {
   const { accountMaster, depthOfBook: book } = state;
@@ -54,22 +70,6 @@ export const removeQuoteFromBook = (state: ReducerState, quote: BondQuote) => {
     item.offers = item.offers.filter(offer => offer.client !== clientName);
   }
 }
-
-export const priceFormat = (price: number): string => {
-  return '$' + price;
-}
-
-export const qtyFormat = (qty: number): string => {
-  return (qty/1000000).toFixed(2) + 'mm';
-}
-
-const sorter = (sortType: string) => (a: any, b: any) => {
-  if (a[sortType] > b[sortType]) return 1;
-  if (a[sortType] < b[sortType]) return 2;
-  return -1;
-}
-
-export const byPrice = sorter('price');
 
 export const getBestBidsFromBondIdKeyValues = (depthOfBook: DepthOfBook): BestBidOffer[] => {
   const topBidOffers: BestBidOffer[] = [];

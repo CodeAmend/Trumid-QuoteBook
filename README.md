@@ -7,7 +7,12 @@
 
 
 ### Extremely useful notes
->Pay particular attention to performance! The default simulation parameters of the QuoteBook server are 10 quote updates per second across 100 bonds. Play with the parameters on the server to see how your app handles 1000 bonds. What about 100 updates/second? Does application performance deteriorate as you let it run for several minutes or hours?
+AgGrid has a few issues
+* Grid blinks with each update.
+* Because of this scrolling down shoots back to top
+* Occasionally, a grid value will get stuck in a loop (most likely in util function NEEDS unit test)
+* Havn't dove deep enough into AgGrid to style and change widths of cells.
+
 
 
 

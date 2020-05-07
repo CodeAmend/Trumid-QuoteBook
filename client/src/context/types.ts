@@ -85,14 +85,6 @@ export interface BestBidOffer {
   offer: QuoteFigures; 
 }
 
-export interface QuoteBookHooks {
-  createQuote: (request: CreateQuote) => void;
-  replaceQuote: (request: ReplaceQuote) => void;
-  cancelQuote: () => void;
-  depthOfBook: DepthOfBook;
-  bestBidOffer: BestBidOffer[];
-}
-
 export type DepthOfBookItem = {
   bondId: string;
   bondName: string;
@@ -104,16 +96,25 @@ export type DepthOfBook = {
   [key: string]: DepthOfBookItem;
 }
 
-export interface QuoteBook {
-  [key: string]: {
-    bondName: string;
-    bid: QuoteFigures[];
-    offer: QuoteFigures[];
-  }
-}
-
 export type ReducerState = {
   depthOfBook: DepthOfBook;
   accountMaster: AccountMaster[];
   bondMaster: BondMaster[];
 }
+
+export interface QuoteBookHooks {
+  createQuote: (request: CreateQuote) => void;
+  replaceQuote: (request: ReplaceQuote) => void;
+  cancelQuote: () => void;
+  depthOfBook: DepthOfBook;
+  bestBidOffer: BestBidOffer[];
+}
+
+
+// export interface QuoteBook { [key: string]: {
+//     bondName: string;
+//     bid: QuoteFigures[];
+//     offer: QuoteFigures[];
+//   }
+// }
+
