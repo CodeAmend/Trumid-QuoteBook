@@ -5,12 +5,14 @@ import App from './QuoteBookApp';
 import { Provider } from './context';
 import * as serviceWorker from './serviceWorker';
 
+
+// TODO: find out why this is a thing!!!
+// https://github.com/facebook/react/issues/16295
+// had to remove React strict mode because of reducer side effect.
 ReactDOM.render(
-  <React.StrictMode>
-    <Provider>
-      <App />
-    </Provider>
-  </React.StrictMode>,
+  <Provider>
+    <App />
+  </Provider>,
   document.getElementById('root')
 );
 

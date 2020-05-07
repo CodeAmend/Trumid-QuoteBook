@@ -1,28 +1,85 @@
 import {
-  BidBuy,
-  BondsByName,
-  BestBidBuy,
+  QuoteFigures,
   BondQuote,
-  LookUpTables,
+  ReducerState,
+  DepthOfBook,
+  BondsByBids,
 } from './types';
 
+
+// TODO: These mutate objects, should they?
+export const addNewQuoteToBook = (state: ReducerState, quote: BondQuote): DepthOfBook => {
+  const { accountMaster, depthOfBook: book } = state;
+  const { qty, price, bondId, accountId } = quote;
+  const client = accountMaster[accountId].name;
+  const item = book[bondId];
+  const figures: QuoteFigures = { client, qty: qtyFormat(qty), price: priceFormat(price) };
+
+  if (quote.side === 'B') {
+    item.bids.push(figures)
+    item.bids = item.bids.sort(byPrice)
+  } else { // Side === 'S'
+    item.offers.push(figures);
+  }
+  return book;
+}
+
+export const updateQuoteOnBook = (state: ReducerState, quote: BondQuote): DepthOfBook => {
+  const { accountMaster, depthOfBook: book } = state;
+  const { qty, price, bondId, accountId } = quote;
+  const client = accountMaster[accountId].name;
+  const item = book[bondId];
+
+  const figures: QuoteFigures = { client, qty: qtyFormat(qty), price: priceFormat(price) };
+
+  if (quote.side === 'B') {
+    item.bids.map(bid => bid.client === client ? figures : bid);
+    item.bids = item.bids.sort(byPrice)
+  } else { // Side === 'S'
+    item.offers.map(bid => bid.client === client ? figures : bid);
+    item.offers = item.offers.sort(byPrice)
+  }
+  return book;
+}
+
+export const removeQuoteFromBook = (state: ReducerState, quote: BondQuote) => {
+  const { accountMaster, depthOfBook } = state;
+  const { accountId, side, bondId } = quote;
+  const clientName = accountMaster[accountId].name;
+
+  const item = depthOfBook[bondId];
+  if (side === 'B') {
+    item.bids = item.bids.filter(bid => bid.client !== clientName);
+  } else {
+    item.offers = item.offers.filter(offer => offer.client !== clientName);
+  }
+}
+
+export const priceFormat = (price: number): string => {
+  return '$' + price;
+}
+
+export const qtyFormat = (qty: number): string => {
+  return '' + qty;
+}
 
 const sorter = (sortType: string) => (a: any, b: any) => {
   if (a[sortType] > b[sortType]) return 1;
   if (a[sortType] < b[sortType]) return 2;
   return -1;
 }
-const byPrice = sorter('price');
 
+export const byPrice = sorter('price');
 
-export const getBestBidsFromReducedBonds = (bondsByName: BondsByName): BestBidBuy[] => {
-  const topBidOffers: BestBidBuy[] = [];
+export const getBestBidsFromBondIdKeyValues = (depthOfBook: DepthOfBook): BondsByBids[] => {
+  const topBidOffers: BondsByBids[] = [];
 
-  for (let [bondName, { bid, offer }] of Object.entries(bondsByName)) {
-    const bestBid: BidBuy = bid.sort(byPrice)[0];
-    const bestOffer: BidBuy = offer.sort(byPrice)[0];
+  for (let [, { bondName, bids, offers, bondId }] of Object.entries(depthOfBook)) {
+    const bestBid: QuoteFigures = bids.sort(byPrice)[0];
+    const bestOffer: QuoteFigures = offers.sort(byPrice)[0];
     topBidOffers.push({
       bondName,
+      bondId,
       bid: bestBid || null,
       offer: bestOffer || null,
     })
@@ -30,30 +87,4 @@ export const getBestBidsFromReducedBonds = (bondsByName: BondsByName): BestBidBu
   return topBidOffers; 
 }
 
-export const reduceBondQuotes = (quotes: BondQuote[], tables: LookUpTables): BondsByName => {
-  const bondsByName = quotes.reduce((acc: any, item: BondQuote) => {
 
-    // accountId and bondId filter
-    const accountMatch = tables.accounts.find(account => account.id === item.accountId);
-    const bondMatch = tables.bonds.find(bond => bond.id === item.bondId);
-
-    if (!accountMatch) throw new Error(`No account matching accountId ${item.accountId}`)
-    if (!bondMatch) throw new Error(`No account matching bondId ${item.bondId}`)
-
-    // Initial object with Bond name keys 
-    if (!acc[bondMatch.name]) acc[bondMatch.name] = { bid: [], offer: [] };
-
-    // Bid and Sell fields are the same for both
-    const { qty, price } = item;
-    const bidBuyItem = { qty, price, client: accountMatch.name }
-
-    // Separete buy and sell and use previous field bidBuyItem
-    // Offer and Bid
-    if (item.side === 'B') acc[bondMatch.name].offer.push(bidBuyItem);
-    if (item.side === 'S') acc[bondMatch.name].bid.push(bidBuyItem);
-
-    return acc;
-  }, {});
-
-  return bondsByName;
-}

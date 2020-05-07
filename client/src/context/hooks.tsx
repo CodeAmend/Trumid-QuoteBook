@@ -1,38 +1,56 @@
 import React from 'react';
 import quoteBookContext from '.';
-import { IUseQuoteBook, BestBidBuy } from './types';
-import { reduceBondQuotes, getBestBidsFromReducedBonds } from './utils';
+import {
+  QuoteBookHooks,
+  ReplaceQuote,
+  CreateQuote,
+  CancelQuote,
+} from './types';
 
-export const useQuotebook = (): IUseQuoteBook => {
+
+export const useQuotebook = (): QuoteBookHooks => {
   const {
     socket,
-    lookupTables,
-    quoteBook,
+    depthOfBook,
   } = React.useContext(quoteBookContext.context)
-  
-  const updateQuoteBook = (): void => {
-    socket.emit('quoteBook.snapshot');
+
+  const createQuote = (request: CreateQuote) => {
+    request =  {
+      requestId: Math.random().toString(36).substr(2, 5),
+      accountId: 0,
+      bondId: 'sdfd', // lookupTables.bonds[0].id,
+      side: 'B',
+      price: 99.975,
+      qty: 1000000
+    };
+    console.log("Outgoing: quote.create", request);
+    socket.emit('quote.create', request);
   }
 
-  const bestBidBuy: BestBidBuy[] = React.useMemo(() => {
-    
-    if ( !quoteBook.length || !lookupTables.bonds.length || !lookupTables.accounts.length) {
-     return [];
-    }
+  const replaceQuote = (request: ReplaceQuote) => {
+    request = {
+      requestId: Math.random().toString(36).substr(2, 5),
+      quoteId: 'dsafwr', // currentQuote.id,
+      price: 99.975,
+      qty: 1000000
+    };
+    console.log("Outgoing: quote.replace", request);
+    socket.emit('quote.replace', request);
+  }
 
-    // Reduce by BOND NAME keys
-    const reducedBonds = reduceBondQuotes(quoteBook, lookupTables);
-    // Reduce by best bids / buys
-    const bestBids = getBestBidsFromReducedBonds(reducedBonds);
-
-    return bestBids;
-  }, [quoteBook, lookupTables]);
+  const cancelQuote = () => {
+    const request: CancelQuote = {
+      requestId: Math.random().toString(36).substr(2, 5),
+      quoteId: 'fsfsd', // currentQuote.id
+    };
+    socket.emit('quote.cancel', request);
+  }
 
   return {
-    lookupTables,
-    updateQuoteBook,
-    quoteBook,
-    bestBidBuy,
+    createQuote,
+    replaceQuote,
+    cancelQuote,
+    depthOfBook,
   }
 }
 
