@@ -1,4 +1,3 @@
-import { updateQuoteOnBook } from './utils';
 import { mockDepthOfBook, mockAccountMaster } from './mocks';
 
 

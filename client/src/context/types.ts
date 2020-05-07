@@ -78,7 +78,7 @@ export type BondsByBondIdKey = {
   }
 }
 
-export interface BondsByBids {
+export interface BestBidOffer {
   bondName: string;
   bondId: string;
   bid: QuoteFigures; 
@@ -90,6 +90,7 @@ export interface QuoteBookHooks {
   replaceQuote: (request: ReplaceQuote) => void;
   cancelQuote: () => void;
   depthOfBook: DepthOfBook;
+  bestBidOffer: BestBidOffer[];
 }
 
 export type DepthOfBookItem = {

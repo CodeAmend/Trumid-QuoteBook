@@ -1,15 +1,10 @@
 import React from "react"
 import { Table } from './styles';
-import { BondsByBids } from '../context/types';
+import { BestBidOffer } from '../context/types';
 import { useQuotebook } from '../context/hooks';
-import { getBestBidsFromBondIdKeyValues } from '../context/utils';
 
 const QuoteTable = () => {
-  const { depthOfBook } = useQuotebook();
-
-  // TODO: TEMPORARY, most likely this will come from useQuoteHooks
-  const bestBidOffer = getBestBidsFromBondIdKeyValues(depthOfBook);
-
+  const { bestBidOffer } = useQuotebook();
 
   if (!bestBidOffer.length) return null;
 
@@ -27,7 +22,7 @@ const QuoteTable = () => {
         </tr>
       </thead>
       <tbody>
-        {bestBidOffer.map(({ bondName, bid, offer }: BondsByBids) => (
+        {bestBidOffer.map(({ bondName, bid, offer }: BestBidOffer) => (
           <tr key={bondName}>
             <td>{bondName}</td>
             <td>{bid?.client}</td>

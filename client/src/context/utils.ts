@@ -3,7 +3,7 @@ import {
   BondQuote,
   ReducerState,
   DepthOfBook,
-  BondsByBids,
+  BestBidOffer,
 } from './types';
 
 
@@ -71,8 +71,8 @@ const sorter = (sortType: string) => (a: any, b: any) => {
 
 export const byPrice = sorter('price');
 
-export const getBestBidsFromBondIdKeyValues = (depthOfBook: DepthOfBook): BondsByBids[] => {
-  const topBidOffers: BondsByBids[] = [];
+export const getBestBidsFromBondIdKeyValues = (depthOfBook: DepthOfBook): BestBidOffer[] => {
+  const topBidOffers: BestBidOffer[] = [];
 
   for (let [, { bondName, bids, offers, bondId }] of Object.entries(depthOfBook)) {
     const bestBid: QuoteFigures = bids.sort(byPrice)[0];
@@ -86,5 +86,3 @@ export const getBestBidsFromBondIdKeyValues = (depthOfBook: DepthOfBook): BondsB
   }
   return topBidOffers; 
 }
-
-

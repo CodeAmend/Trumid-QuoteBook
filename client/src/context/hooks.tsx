@@ -1,5 +1,6 @@
 import React from 'react';
 import quoteBookContext from '.';
+import { getBestBidsFromBondIdKeyValues } from './utils';
 import {
   QuoteBookHooks,
   ReplaceQuote,
@@ -51,6 +52,7 @@ export const useQuotebook = (): QuoteBookHooks => {
     replaceQuote,
     cancelQuote,
     depthOfBook,
+    bestBidOffer: getBestBidsFromBondIdKeyValues(depthOfBook)
   }
 }
 
