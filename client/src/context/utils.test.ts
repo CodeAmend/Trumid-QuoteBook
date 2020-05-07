@@ -1,5 +1,5 @@
 import { DepthOfBookItem, QuoteFigures, DepthOfBook, ReducerState, BondQuote } from './types';
-import { addNewQuoteToBook, updateQuoteOnBook } from './utils';
+import { addNewQuoteToBook, updateQuoteOnBook, removeQuoteFromBook } from './utils';
 
 
 enum Sides {
@@ -9,10 +9,10 @@ enum Sides {
 
 type MockQuote = {
   side: Sides.BUY | Sides.SELL;
-  price: number;
-  qty: number;
   bondId: "bond1" | "bond2";
   accountId: 0 | 1 | 2;
+  price?: number;
+  qty?: number;
 }
 
 const mockBondMaster = [
@@ -58,8 +58,8 @@ export const getMockeQuote = ({ bondId, accountId, side, price, qty }: MockQuote
   bondId,
   accountId,
   side,
-  price,
-  qty,
+  price: price || 10,
+  qty: qty || 1000000,
 
   id: "abc",
   requestId: "0yr6l",
@@ -183,6 +183,14 @@ describe("addNewQuoteToBook", () => {
 describe("updateQuoteOnBook", () => {
   let state: ReducerState;
 
+  const getQuoteMasterClientName = (quote: BondQuote) => {
+    return state.accountMaster.find(am => am.id === quote.accountId);
+  }
+  
+  const findClientNameInBond = (clientName: string, bond: DepthOfBookItem, typeName?: string) => {
+    return bond[typeName || "bids"].find((b: QuoteFigures) => b.client === clientName);
+  }
+
   beforeEach(() => {
     state = {
       accountMaster: mockAccountMaster,
@@ -217,13 +225,6 @@ describe("updateQuoteOnBook", () => {
       });
     });
 
-    const getQuoteMasterClientName = (quote: BondQuote) => {
-      return state.accountMaster.find(am => am.id === quote.accountId);
-    }
-    
-    const findClientNameInBond = (clientName: string, bond: DepthOfBookItem, typeName?: string) => {
-      return bond[typeName || "bids"].find((b: QuoteFigures) => b.client === clientName);
-    }
 
 
     it("update does nothing when quote doesnt", () => {
@@ -260,6 +261,59 @@ describe("updateQuoteOnBook", () => {
         .find(b => b.client === quote2Client?.name)
 
       expect(testBondMatchingClient).toEqual({ client: 'XY', price: 10, qty: 10000000 })
+    });
+
+  });
+});
+
+describe("removeQuoteOnBook", () => {
+  let state: ReducerState;
+
+  const getQuoteMasterClientName = (quote: BondQuote) => {
+    return state.accountMaster.find(am => am.id === quote.accountId);
+  }
+  
+  const findClientNameInBond = (clientName: string, bond: DepthOfBookItem, typeName?: string) => {
+    return bond[typeName || "bids"].find((b: QuoteFigures) => b.client === clientName);
+  }
+
+  beforeEach(() => {
+    state = {
+      accountMaster: mockAccountMaster,
+      bondMaster: mockBondMaster,
+      depthOfBook: getNewMockDepthOfBook(),
+    }
+  });
+
+  describe("buy", () => {
+    let mockDepthOfBook: DepthOfBook;
+
+    beforeEach(() => {
+      mockDepthOfBook = getNewMockDepthOfBook();
+    });
+
+
+
+    it("it removes bond with matching client", () => {
+      let bondItem: QuoteFigures;
+      const mockBond = mockDepthOfBook['bond2']
+      const clientName = 'XY'
+
+      bondItem = findClientNameInBond(clientName, mockBond)
+      expect(bondItem).toBeTruthy;
+
+      let findByClient = mockDepthOfBook['bond2'].bids.find(b => b.client === clientName);
+      expect(findByClient).toBeTruthy();
+
+      const testQuote = getMockeQuote({ bondId: 'bond2', accountId: 1, side: Sides.BUY })
+      const testDepthOfBook = removeQuoteFromBook(state, testQuote);
+
+      const updatedBids = testDepthOfBook['bond2'].bids;
+      expect(updatedBids.length).toBe(1);
+
+      findByClient = testDepthOfBook['bond2'].bids.find(b => b.client === clientName);
+      expect(findByClient).toBeFalsy();
+
     });
 
   });

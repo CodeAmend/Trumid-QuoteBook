@@ -69,6 +69,7 @@ export const removeQuoteFromBook = (state: ReducerState, quote: BondQuote) => {
   } else {
     item.offers = item.offers.filter(offer => offer.client !== clientName);
   }
+  return depthOfBook;
 }
 
 export const getBestBidsFromBondIdKeyValues = (depthOfBook: DepthOfBook): BestBidOffer[] => {
