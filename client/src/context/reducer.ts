@@ -1,8 +1,6 @@
 import { ReducerState, DepthOfBook, BondMaster, BondQuote } from './types';
 import { actionTypes } from './actions';
 import {
-  // combineSnapshotsToBondIdKeyValues,
-  // getBestBidsFromBondIdKeyValues,
   addNewQuoteToBook,
   updateQuoteOnBook,
   removeQuoteFromBook,
@@ -34,7 +32,6 @@ export const quoteBookReducer = (state: ReducerState, action: any): any => {
 
     case actionTypes.INITIALIZE_DEPTH_OF_BOOK:
       depthOfBook = action.payload.reduce((acc: DepthOfBook, bondItem: BondMaster) => {
-        // BondId with blank attibs
         acc[bondItem.id] = {
           bondId: bondItem.id,
           bondName: bondItem.name,
@@ -51,21 +48,6 @@ export const quoteBookReducer = (state: ReducerState, action: any): any => {
         addNewQuoteToBook(state, quote);
       })
       return { ...state, }
-
-    // // ADD SNAPSHOT TO BOND LIST
-    // case actionTypes.CONVERT_SNAPSHOTS:
-    //   const { accountMaster, bondMaster, quoteBook } = action.payload;
-    //   const bondsByBondId = combineSnapshotsToBondIdKeyValues({
-    //     quoteBook,
-    //     bondMaster,
-    //     accountMaster,
-    //   })
-    //   return { ...state, bondsByBondId }
-
-    // // TODO: TOP_OF_BOOK
-    // case actionTypes.BEST_BIDS:
-    //   const bestBids = getBestBidsFromBondIdKeyValues(action.payload);
-    //   return { ...state, bestBids }
 
     default:
       return state;

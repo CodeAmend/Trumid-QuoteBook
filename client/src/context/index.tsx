@@ -33,11 +33,7 @@ const initialReducerState = {
 export const context = React.createContext<QuoteBookContext>(initialQuoteBookContext);
 
 export const Provider = (props: { children: ReactNode }) => {
-
   const [quoteBook, setQuoteBook] = React.useState<BondQuote[]>([]);
-  // const [accountMaster, setAccountMaster] = React.useState<AccountMaster[]>([]);
-  // const [bondMaster, setBondMaster] = React.useState<BondMaster[]>([]);
-
   const [state, dispatch] = React.useReducer(quoteBookReducer, initialReducerState);
   const { accountMaster, bondMaster } = state;
 
@@ -70,7 +66,7 @@ export const Provider = (props: { children: ReactNode }) => {
     socket.emit('bondMaster.snapshot')
   }, []);
 
-  // Master Tables Loaded 
+  // After Master Tables Loaded 
   React.useEffect(() => {
     if (accountMaster.length && bondMaster.length) {
       dispatch(actions.initializeDepthOfBookWith(bondMaster));
@@ -78,17 +74,16 @@ export const Provider = (props: { children: ReactNode }) => {
     }
   }, [accountMaster, bondMaster]);
 
+  // After quotebook is reconciled to depthOfBook
   React.useEffect(() => {
     if (quoteBook.length) {
       dispatch(actions.reconcileQuotebookWith(quoteBook));
       socket.emit('quoteBook.subscribe');
       setTimeout(() => {
         socket.emit('quoteBook.unsubscribe');
-      }, 5 * 1000)
+      }, 10 * 1000)
     }
   }, [quoteBook]);
-
-  console.log(state.depthOfBook)
 
   return (
     <context.Provider value={{ socket, ...state, dispatch }} {...props} />
@@ -99,24 +94,3 @@ export default {
   context,
   Provider,
 }
-
-  // React.useEffect(() => {
-  //   if (quoteBook.length) {
-  //     dispatch(actions.convertAndMarrySnapshotsToBondIdKeysWith({
-  //       quoteBook,
-  //       accountMaster,
-  //       bondMaster
-  //     }));
-  //   }
-  // }, [quoteBook]);
-
-  // React.useEffect(() => {
-  //   if (Object.entries(state.bondsByBondId)) {
-  //     dispatch(actions.getBestBidsFromBondIdKeyValues(state.bondsByBondId));
-  //   }
-  // }, [state.bondsByBondId]);
-
-
-
-// socket.on('quoteAccepted', console.log);
-// socket.on('quoteRejected', console.log);

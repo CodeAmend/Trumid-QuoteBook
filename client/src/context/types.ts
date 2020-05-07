@@ -93,7 +93,7 @@ export interface QuoteBookHooks {
 
 export type DepthOfBookItem = {
   bondId: string;
-  bondName: string | null;
+  bondName: string;
   bids: QuoteFigures[];
   offers: QuoteFigures[];
 }
