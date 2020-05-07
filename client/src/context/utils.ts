@@ -48,25 +48,41 @@ export const combineSnapshotsToBondIdKeyValues = (props: SnapshotProps): BondsBy
     const { qty, price, bondId } = item;
 
     const matchingAccount = accountMaster.find(account => account.id === item.accountId);
+
+    // TODO: convert to lookup map object key
     const matchingBond = bondMaster.find(bond => bond.id === bondId);
 
-    if (!matchingAccount) throw new Error(`No account matching accountId ${item.accountId}`)
-    if (!matchingBond) throw new Error(`No account matching bondId ${bondId}`)
 
+    if (!matchingAccount) {
+      throw new Error(`No account matching accountId ${item.accountId}`)
+    }
+
+    if (!matchingBond) {
+      throw new Error(`No account matching bondId ${bondId}`)
+    }
+    
     // Chreate new KEY value of bondId and bondName, bid, offer
-    if (!acc[bondId]) acc[bondId] = {
-      bondName: matchingBond.name,
-      bid: [],
-      offer: [],
-    };
+    if (!acc[bondId]) {
+      acc[bondId] = {
+        bondName: matchingBond.name,
+        bid: [],
+        offer: [],
+      };
+    } 
 
     const bidBuyItem = {
       qty: qtyFormat(qty),
       price: priceFormat(price),
       client: matchingAccount.name
     }
-    if (item.side === 'B') acc[bondId].offer.push(bidBuyItem);
-    if (item.side === 'S') acc[bondId].bid.push(bidBuyItem);
+
+    if (item.side === 'B') {
+     acc[bondId].offer.push(bidBuyItem);
+    }
+
+    if (item.side === 'S') {
+     acc[bondId].bid.push(bidBuyItem);
+    } 
 
     return acc;
   }, {});
