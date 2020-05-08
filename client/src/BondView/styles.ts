@@ -12,12 +12,17 @@ export const ViewWrapper = styled.section`
 export const Header = styled.header`
   display: flex;
   width: 100%;
-  justify-content: center;
+  justify-content: space-around;
+  align-items: center;
 
   position: relative;
 
   h1 {
     font-size: 2rem;
+  }
+
+  nav {
+
   }
 
   button {

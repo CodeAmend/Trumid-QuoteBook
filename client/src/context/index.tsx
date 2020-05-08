@@ -64,6 +64,9 @@ export const Provider = (props: { children: ReactNode }) => {
       }
     });
 
+    socket.on('quoteAccepted', console.log);
+    socket.on('quoteRejected', console.log);
+
     socket.emit('accountMaster.snapshot')
     socket.emit('bondMaster.snapshot')
   }, []);

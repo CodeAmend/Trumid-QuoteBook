@@ -15,16 +15,14 @@ export const useQuotebook = (): QuoteBookHooks => {
     depthOfBook,
     selectedBond,
     setSelectedBond,
+    bondMaster,
+    accountMaster,
   } = React.useContext(quoteBookContext.context)
 
   const createQuote = (request: CreateQuote) => {
     request =  {
+      ...request,
       requestId: Math.random().toString(36).substr(2, 5),
-      accountId: 0,
-      bondId: 'sdfd', // lookupTables.bonds[0].id,
-      side: 'B',
-      price: 99.975,
-      qty: 1000000
     };
     console.log("Outgoing: quote.create", request);
     socket.emit('quote.create', request);
@@ -56,6 +54,8 @@ export const useQuotebook = (): QuoteBookHooks => {
     depthOfBook,
     selectedBond,
     setSelectedBond,
+    bondMaster,
+    accountMaster,
     selectedBondData: convertBondDataToRowData(depthOfBook, selectedBond),
     bestBidOffer: getBestBidsFromBondIdKeyValues(depthOfBook)
   }

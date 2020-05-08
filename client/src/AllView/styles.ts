@@ -7,6 +7,7 @@ export const ViewWrapper = styled.section`
   align-items: center;
 
   width: 100%;
+
 `;
 
 export const Header = styled.header`
