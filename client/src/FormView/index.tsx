@@ -19,7 +19,6 @@ function FormView() {
     bondMaster,
     selectedBond,
     setSelectedBond,
-    depthOfBook
   } = useQuotebook();
 
   const [formState, setFormState] = React.useState<CreateQuote & Action>(initialFormState);
@@ -32,13 +31,11 @@ function FormView() {
 
   // Bond SELECT setup
   const bondSelectItems = React.useMemo(
-    () => createBondSelectItems(bondMaster),
-    [bondMaster.length, depthOfBook]);
+    () => createBondSelectItems(bondMaster), [bondMaster]); 
 
   // Account SELECT setup
-  const accountSelectItems = React.useMemo(
-    () => createAccountSelectItems(accountMaster),
-    [bondMaster.length, depthOfBook]);
+    const accountSelectItems = React.useMemo(
+      () => createAccountSelectItems(accountMaster), [bondMaster]);
 
 
   const handlFormChange =({ target }): void => {
