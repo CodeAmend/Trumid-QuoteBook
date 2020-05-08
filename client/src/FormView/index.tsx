@@ -111,7 +111,7 @@ function FormView() {
           ))}
         </select>
 
-        <select value={formState.side} onChange={handlFormChange}>
+        <select name="side" value={formState.side} onChange={handlFormChange}>
           <option value="B">Bid</option>
           <option value="S">Offer</option>
         </select>
