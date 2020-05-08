@@ -19,6 +19,7 @@ function FormView() {
     bondMaster,
     selectedBond,
     setSelectedBond,
+    depthOfBook,
   } = useQuotebook();
 
   const [formState, setFormState] = React.useState<CreateQuote & { action: Action }>(initialFormState);
@@ -28,13 +29,15 @@ function FormView() {
     setFormState({ ...initialFormState, bondId: selectedBond });
   }, [selectedBond]);
 
+
+  // TODO: Fix this code smell. depthOfBook as a dependency should not be needed.
   // Bond SELECT setup
   const bondSelectItems = React.useMemo(
-    () => createBondSelectItems(bondMaster), [bondMaster]); 
+    () => createBondSelectItems(bondMaster), [bondMaster, depthOfBook]); 
 
   // Account SELECT setup
     const accountSelectItems = React.useMemo(
-      () => createAccountSelectItems(accountMaster), [accountMaster]);
+      () => createAccountSelectItems(accountMaster), [accountMaster, depthOfBook]);
 
 
   const handlFormChange =({ target }): void => {
