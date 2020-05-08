@@ -38,7 +38,7 @@ export interface CreateQuote {
   side: 'B' | 'S';
   price: number;
   qty: number;
-  requestId: string;
+  requestId?: string;
 }
 
 export interface ReplaceQuote {
@@ -122,6 +122,8 @@ export interface QuoteBookHooks {
   replaceQuote: (request: ReplaceQuote) => void;
   cancelQuote: () => void;
   selectedBond: string;
+  bondMaster: BondMaster[];
+  accountMaster: AccountMaster[];
   setSelectedBond: (bondId: string) => void;
   depthOfBook: DepthOfBook;
   bestBidOffer: BestBidOffer[];

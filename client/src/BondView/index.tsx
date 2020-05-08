@@ -1,21 +1,29 @@
 import React from "react"
+
 import { useQuotebook } from '../context/hooks';
 import { columnDefs } from './columnDefs';
-import Table from '../Table';
 import { ViewWrapper, Header } from './styles';
+
+import Table from '../Table';
 
 
 const BondView = () => {
-  const { selectedBond, setSelectedBond, selectedBondData } = useQuotebook();
+  const { depthOfBook, selectedBond, selectedBondData } = useQuotebook();
+
+  if (!selectedBond) {
+    return null;
+  }
 
   return(
-    <ViewWrapper>
+    <ViewWrapper> 
       <Header>
-        <h1>{selectedBond}</h1>
-        <button onClick={() => setSelectedBond('')}>Go Back</button>
-
+        <h1>Bond View</h1>
+        <p><strong>Name: </strong>{depthOfBook[selectedBond].bondName}</p>
       </Header>
-      <Table columnDefs={columnDefs} rowData={selectedBondData} />
+      <Table
+        columnDefs={columnDefs}
+        rowData={selectedBondData}
+      />
     </ViewWrapper>
   )
 }

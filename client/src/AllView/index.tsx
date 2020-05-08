@@ -8,18 +8,20 @@ import { ViewWrapper, Header } from './styles';
 
 
 const AllView = () => {
-  const { bestBidOffer, setSelectedBond } = useQuotebook();
+  const { selectedBond, bestBidOffer, setSelectedBond } = useQuotebook();
 
-  if (!bestBidOffer.length) return null;
+  if (selectedBond)  {
+    return null;
+  };
 
   const onRowClicked = ({ data }: any) => {
     setSelectedBond(data.bondId)
   }
 
-  return(
+  return (
     <ViewWrapper>
       <Header>
-        <h1>All Bonds View</h1>
+        <h1>All Bond View</h1>
       </Header>
       <Table
         columnDefs={columnDefs}
