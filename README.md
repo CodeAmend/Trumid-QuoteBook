@@ -24,6 +24,7 @@ AgGrid has a few issues
 https://stackoverflow.com/questions/47326640/ag-grid-react-crashing-on-basic-component-import-missing-react-dom-factories
 I found this stackoverflow and needed to install a missing dependency that was removed in a previous react version `react-dom-factories`
 
+* Rerender article on medium https://medium.com/@guptagaruda/react-hooks-understanding-component-re-renders-9708ddee9928
 
 #### Questions
 * It seems on "N" new quote actions, the same client can appear more than once. Should they be combined?
