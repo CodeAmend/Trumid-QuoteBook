@@ -7,7 +7,6 @@ import { columnDefs } from './columnDefs';
 import { ViewWrapper, Header } from './styles';
 
 
-
 const AllView = () => {
   const { bestBidOffer, setSelectedBond } = useQuotebook();
   console.log(bestBidOffer)
