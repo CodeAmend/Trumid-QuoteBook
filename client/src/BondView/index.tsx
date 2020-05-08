@@ -14,6 +14,10 @@ const BondView = () => {
     return null;
   }
 
+  const onRowClicked = ({ data }: any) => {
+    console.log(data)
+  }
+
   return(
     <ViewWrapper> 
       <Header>
@@ -23,6 +27,7 @@ const BondView = () => {
       <Table
         columnDefs={columnDefs}
         rowData={selectedBondData}
+        onRowClicked={onRowClicked}
       />
     </ViewWrapper>
   )

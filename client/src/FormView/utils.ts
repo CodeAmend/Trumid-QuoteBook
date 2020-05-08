@@ -21,7 +21,7 @@ export const actionSelectItems = [
   { value: 'C', label: 'Cancel' },
 ];
 
-export const initialFormState: CreateQuote & Action = {
+export const initialFormState: CreateQuote & { action: Action } = {
   bondId: '',
   side: 'B',
   accountId: 0,

@@ -1,5 +1,8 @@
+export type Action = 'N' | 'U' | 'C';
+
+export type Side = "S" | "B";
+
 export type SelectItem = { value: string, label: string };
-export type Action = { action: 'N' | 'U' | 'C' }
 
 export type BondMaster = {
   id: string;
@@ -12,7 +15,7 @@ export type AccountMaster = {
 }
 
 export type QuoteAction = {
-  action: "N" | "C" | "U";
+  action: Action;
   quote: BondQuote;
 }
 
@@ -30,7 +33,7 @@ export interface BondQuote {
   price: number;
   qty: number;
   sequence: number
-  side: "S" | "B";
+  side: Side;
   updatedAt: string;
   reqId?: string;
 }
@@ -38,7 +41,7 @@ export interface BondQuote {
 export interface CreateQuote {
   accountId: number;
   bondId: string;
-  side: 'B' | 'S';
+  side: Side;
   price: number;
   qty: number;
   requestId?: string;
@@ -57,7 +60,7 @@ export interface ReplaceQuote {
 }
 
 export interface QuoteAccepted {
-  action: 'N' | 'U' | 'C';
+  action: Action;
   quote: BondQuote;
   requestId: string;
 }

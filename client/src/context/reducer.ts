@@ -10,7 +10,6 @@ import {
 export const quoteBookReducer = (state: ReducerState, action: any): any => {
   let depthOfBook: DepthOfBook = state.depthOfBook;
 
-
   switch (action.type) {
     case actionTypes.QUOTE_CREATE:
       addNewQuoteToBook(state, action.payload);

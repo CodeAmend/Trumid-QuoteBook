@@ -21,13 +21,12 @@ function FormView() {
     setSelectedBond,
   } = useQuotebook();
 
-  const [formState, setFormState] = React.useState<CreateQuote & Action>(initialFormState);
+  const [formState, setFormState] = React.useState<CreateQuote & { action: Action }>(initialFormState);
 
   // Resets fields and select values
   React.useEffect(() => {
     setFormState({ ...initialFormState, bondId: selectedBond });
   }, [selectedBond]);
-
 
   // Bond SELECT setup
   const bondSelectItems = React.useMemo(
@@ -35,7 +34,7 @@ function FormView() {
 
   // Account SELECT setup
     const accountSelectItems = React.useMemo(
-      () => createAccountSelectItems(accountMaster), [bondMaster]);
+      () => createAccountSelectItems(accountMaster), [accountMaster]);
 
 
   const handlFormChange =({ target }): void => {
