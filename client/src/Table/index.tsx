@@ -1,4 +1,6 @@
 import React from "react"
+import { GridSizeChangedEvent } from 'ag-grid-community';
+import { DepthOfBookItem } from '../context/types';
 import { AgGridReact } from 'ag-grid-react';
 import { AgWraper } from './styles';
 
@@ -12,7 +14,7 @@ type TableProps = {
 const Table = (props: TableProps) => {
 
   // TODO: what type is this!?
-  const onGridSizeChanged = (params: any) => {
+  const onGridSizeChanged = (params: GridSizeChangedEvent) => {
     var gridWidth = document.getElementById('grid-wrapper')?.offsetWidth || 0;
     const columnsToShow: any = [];
     const columnsToHide: any = [];
@@ -22,13 +24,17 @@ const Table = (props: TableProps) => {
       const column = allColumns[i];
       totalColsWidth += column.getMinWidth();
       if (totalColsWidth > gridWidth) {
-        columnsToHide.push(column.colId);
+        columnsToHide.push(column.getColId());
       } else {
-        columnsToShow.push(column.colId);
+        columnsToShow.push(column.getColId());
       }
     }
     params.columnApi.setColumnsVisible(columnsToShow, true);
     params.api.sizeColumnsToFit();
+  }
+
+  const getRowNodeId = ({ bondId }: DepthOfBookItem) => {
+    return bondId;
   }
 
   return(
