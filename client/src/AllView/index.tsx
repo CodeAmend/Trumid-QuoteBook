@@ -1,4 +1,5 @@
 import React from "react"
+import { CellClickedEvent } from 'ag-grid-community';
 import { useQuotebook } from '../context/hooks';
 
 import Table from '../Table';
@@ -14,7 +15,7 @@ const AllView = () => {
     return null;
   };
 
-  const onRowClicked = ({ data }: any) => {
+  const onCellClicked = ({ data }: CellClickedEvent) => {
     setSelectedBond(data.bondId)
   }
 
@@ -26,7 +27,7 @@ const AllView = () => {
       <Table
         columnDefs={columnDefs}
         rowData={bestBidOffer}
-        onRowClicked={onRowClicked}
+        onCellClicked={onCellClicked}
       />
     </ViewWrapper>
   )

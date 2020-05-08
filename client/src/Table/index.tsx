@@ -4,7 +4,7 @@ import { AgWraper } from './styles';
 
 
 type TableProps = {
-  onRowClicked?: (params: any) => void;
+  onCellClicked?: (params: any) => void;
   columnDefs: any;
   rowData: any;
 }
@@ -35,6 +35,8 @@ const Table = (props: TableProps) => {
     <AgWraper className="ag-theme-balham-dark">
       <AgGridReact
         {...props}
+        // immutableData={true}
+        // getRowNodeId={getRowNodeId}
         onGridSizeChanged={onGridSizeChanged}
         suppressScrollOnNewData={true}
       />
