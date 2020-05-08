@@ -10,6 +10,7 @@ import { ViewWrapper, Header } from './styles';
 
 const AllView = () => {
   const { bestBidOffer, setSelectedBond } = useQuotebook();
+  console.log(bestBidOffer)
 
   if (!bestBidOffer.length) return null;
 

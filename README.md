@@ -3,17 +3,15 @@
 ## Basic setup
 * `npm run client` run react app 
 * `npm run server` run server
-* `npm run both` run both client and server (coming soon)
+* `npm run dev` run both client and server concurrently
 
 
 ### Extremely useful notes
 AgGrid has a few issues
 * Grid blinks with each update.
-* Because of this scrolling down shoots back to top
-* Occasionally, a grid value will get stuck in a loop (most likely in util function NEEDS unit test)
-* Havn't dove deep enough into AgGrid to style and change widths of cells.
-
-
+* <s>Because of this scrolling down shoots back to top</s>
+* <s>Occasionally, a grid value will get stuck in a loop (most likely in util function NEEDS unit test)</s>
+* <s>Havn't dove deep enough into AgGrid to style and change widths of cells.</s>
 
 
 #### Notes
