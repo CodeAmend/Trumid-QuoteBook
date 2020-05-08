@@ -1,3 +1,6 @@
+export type SelectItem = { value: string, label: string };
+export type Action = { action: 'N' | 'U' | 'C' }
+
 export type BondMaster = {
   id: string;
   name: string;

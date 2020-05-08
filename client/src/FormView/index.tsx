@@ -1,21 +1,15 @@
 import React from 'react';
-import { CreateQuote } from '../context/types';
+import { CreateQuote, Action } from '../context/types';
+import {
+  createBondSelectItems,
+  createAccountSelectItems,
+  actionSelectItems,
+  initialFormState,
+} from './utils';
 
 import { useQuotebook } from '../context/hooks';
 // import { priceFormat, qtyFormat } from '../context/utils';
 
-type SelectItem = { value: string, label: string };
-
-type Action = { action: 'N' | 'U' | 'C' }
-
-const initialFormState: CreateQuote & Action = {
-  bondId: '',
-  side: 'B',
-  accountId: 0,
-  price: 0,
-  qty: 0,
-  action: 'N',
-}
 
 function FormView() {
   // const classes = useStyles();
@@ -28,36 +22,24 @@ function FormView() {
     depthOfBook
   } = useQuotebook();
 
-  // Set up select items only 1 time;
-  const bondSelectItems = React.useMemo(() => {
-    let items: SelectItem[] = [];
-    for (let [, { bondId, bondName }] of  Object.entries(depthOfBook)) {
-      items.push({ value: bondId, label: bondName });
-    }
-    return items;
-  }, [bondMaster.length, depthOfBook]);
-
-  const accountSelectItems = React.useMemo(() => {
-    return accountMaster.reduce((acc: SelectItem[], account) => {
-      acc.push({ value: '' + account.id, label: account.name });
-      return acc;
-    }, []);
-  }, [bondMaster.length, depthOfBook]);
-
-  const actionSelectItems = [
-    { value: 'N', label: 'New' },
-    { value: 'U', label: 'Update' },
-    { value: 'C', label: 'Cancel' },
-  ];
-
   const [formState, setFormState] = React.useState<CreateQuote & Action>(initialFormState);
 
+  // Resets fields and select values
   React.useEffect(() => {
-    if (!selectedBond) {
-      setFormState(initialFormState);
-    }
-
+    setFormState({ ...initialFormState, bondId: selectedBond });
   }, [selectedBond]);
+
+
+  // Bond SELECT setup
+  const bondSelectItems = React.useMemo(
+    () => createBondSelectItems(bondMaster),
+    [bondMaster.length, depthOfBook]);
+
+  // Account SELECT setup
+  const accountSelectItems = React.useMemo(
+    () => createAccountSelectItems(accountMaster),
+    [bondMaster.length, depthOfBook]);
+
 
   const handlFormChange =({ target }): void => {
     setFormState(prev => ({
@@ -70,7 +52,7 @@ function FormView() {
     }
   }
 
-
+  // For CRUD Actions
   const handleOrderType = (): void => {
     const { bondId, side, accountId, price, qty, action } = formState;
     switch (action) {
