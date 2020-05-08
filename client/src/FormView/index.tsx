@@ -2,10 +2,18 @@ import React from 'react';
 import { CreateQuote } from '../context/types';
 
 import { useQuotebook } from '../context/hooks';
-import {EventType} from '@testing-library/react';
 // import { priceFormat, qtyFormat } from '../context/utils';
 
 type SelectItem = { value: string, label: string };
+
+
+const initialFormState: CreateQuote = {
+  bondId: '',
+  side: 'B',
+  accountId: 0,
+  price: 0,
+  qty: 0,
+}
 
 function FormView() {
   // const classes = useStyles();
@@ -34,16 +42,17 @@ function FormView() {
     }, []);
   }, [bondMaster.length, depthOfBook]);
 
-  const [selectState, setSelectState] = React.useState<CreateQuote>({
-    bondId: selectedBond,
-    side: 'B',
-    accountId: 0,
-    price: 0,
-    qty: 0,
-  });
+  const [formState, setFormState] = React.useState<CreateQuote>(initialFormState);
+
+  React.useEffect(() => {
+    if (!selectedBond) {
+      setFormState(initialFormState);
+    }
+
+  }, [selectedBond]);
 
   const handleSelect =({ target }): void => {
-    setSelectState(prev => ({
+    setFormState(prev => ({
       ...prev,
       [target.name]: target.value,
     }));
@@ -55,7 +64,7 @@ function FormView() {
 
 
   const handleAddOrder = (): void => {
-    const { bondId, side, accountId, price, qty } = selectState;
+    const { bondId, side, accountId, price, qty } = formState;
     createQuote({
       accountId: Number(accountId),
       bondId: bondId || bondSelectItems[0].value,
@@ -65,12 +74,12 @@ function FormView() {
     });
   }
 
-  const disabled: boolean = !(selectState.bondId && selectState.price > 0 && selectState.qty > 0);
+  const disabled: boolean = !(formState.bondId && formState.price > 0 && formState.qty > 0);
 
   return(
     <form>
       
-      {!!selectState.bondId && (
+      {!!formState.bondId && (
         <button
           disabled={disabled}
           type="button"
@@ -79,32 +88,40 @@ function FormView() {
         >Add</button>
       )}
 
-      <select name="bondId" value={selectState.bondId} onChange={handleSelect}>
-      {!selectState.bondId && <option>Select a Bond</option>}
+      <select name="bondId" value={formState.bondId} onChange={handleSelect}>
+      {!formState.bondId && <option>Select a Bond</option>}
         {bondSelectItems.length && bondSelectItems.map(({ value, label }) => (
           <option key={value} value={value}>{label}</option>
         ))}
       </select>
 
-      {!!selectState.bondId && (
+      {!!formState.bondId && (
         <>
-        <select value={selectState.accountId} onChange={handleSelect}>
+        <select value={formState.accountId} onChange={handleSelect}>
           {accountSelectItems.length && accountSelectItems.map(({ value, label }) => (
             <option key={value} value={value}>{label}</option>
           ))}
         </select>
 
-        <select value={selectState.side} onChange={handleSelect}>
+        <select value={formState.side} onChange={handleSelect}>
           <option value="B">Bid</option>
           <option value="S">Offer</option>
         </select>
         
         <label htmlFor="qty">Qty (in millions):</label>
-        <input onChange={handleSelect} value={selectState.qty} type="number" id="qty" name="qty" />
+        <input onChange={handleSelect} value={formState.qty} type="number" id="qty" name="qty" />
 
         <label htmlFor="price">Price: $</label>
-        <input onChange={handleSelect} value={selectState.price} type="number" id="price" name="price" />
+        <input onChange={handleSelect} value={formState.price} type="number" id="price" name="price" />
         </>
+      )}
+
+      {!!formState.bondId && (
+        <button
+          type="button"
+          style={{ marginLeft: '1rem' }}
+          onClick={() => setSelectedBond('')}
+        >View All Bonds</button>
       )}
     </form>
   );
