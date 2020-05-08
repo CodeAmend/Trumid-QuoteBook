@@ -88,6 +88,7 @@ export type BondsByBondIdKey = {
 export interface BestBidOffer {
   bondName: string;
   bondId: string;
+  agId: string;
   bid: QuoteFigures; 
   offer: QuoteFigures; 
 }
@@ -95,6 +96,7 @@ export interface BestBidOffer {
 export type DepthOfBookItem = {
   bondId: string;
   bondName: string;
+  agId: string;
   bids: QuoteFigures[];
   offers: QuoteFigures[];
 }

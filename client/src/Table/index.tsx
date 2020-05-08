@@ -33,16 +33,16 @@ const Table = (props: TableProps) => {
     params.api.sizeColumnsToFit();
   }
 
-  const getRowNodeId = ({ bondId }: DepthOfBookItem) => {
-    return bondId;
+  const getRowNodeId = ({ agId }: DepthOfBookItem) => {
+    return agId;
   }
 
   return(
     <AgWraper className="ag-theme-balham-dark">
       <AgGridReact
         {...props}
-        // immutableData={true}
-        // getRowNodeId={getRowNodeId}
+        immutableData={true}
+        getRowNodeId={getRowNodeId}
         onGridSizeChanged={onGridSizeChanged}
         suppressScrollOnNewData={true}
       />

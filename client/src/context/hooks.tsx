@@ -1,6 +1,6 @@
 import React from 'react';
 import quoteBookContext from '.';
-import { convertBondDataToRowData, getBestBidsFromBondIdKeyValues } from './utils';
+import { getingSingleBondWithQuotes, getBondsWithBestQuotes } from './utils';
 import {
   QuoteBookHooks,
   ReplaceQuote,
@@ -56,8 +56,8 @@ export const useQuotebook = (): QuoteBookHooks => {
     setSelectedBond,
     bondMaster,
     accountMaster,
-    selectedBondData: convertBondDataToRowData(depthOfBook, selectedBond),
-    bestBidOffer: getBestBidsFromBondIdKeyValues(depthOfBook)
+    selectedBondData: getingSingleBondWithQuotes(depthOfBook, selectedBond),
+    bestBidOffer: getBondsWithBestQuotes(depthOfBook)
   }
 }
 

@@ -6,6 +6,7 @@ import {
   BestBidOffer,
 } from './types';
 
+export const keyGen = () => Math.random().toString(36).substr(2,5);
 
 export const priceFormat = (price: number): string => {
   return '$' + price;
@@ -71,18 +72,21 @@ export const removeQuoteFromBook = (state: ReducerState, quote: BondQuote) => {
   return depthOfBook;
 }
 
-export const getBestBidsFromBondIdKeyValues = (depthOfBook: DepthOfBook): BestBidOffer[] => {
+export const getBondsWithBestQuotes = (depthOfBook: DepthOfBook): BestBidOffer[] => {
   const topBidOffers: BestBidOffer[] = [];
 
   for (let [, { bondName, bids, offers, bondId }] of Object.entries(depthOfBook)) {
-    // TODO: find out if we should display a bond with no quotes
     const showBondsWithoutData = true;
     if (bids.length || offers.length || showBondsWithoutData) {
       const bestBid: QuoteFigures = bids.sort(byPrice)[0];
       const bestOffer: QuoteFigures = offers.sort(byPrice)[0];
+      // console.log(bestBid + '', bestOffer + '')
+      const agId = (bestBid?.quoteId + bestBid?.quoteId) || keyGen();
+
       topBidOffers.push({
         bondName,
         bondId,
+        agId,
         bid: bestBid || null,
         offer: bestOffer || null,
       })
@@ -91,17 +95,22 @@ export const getBestBidsFromBondIdKeyValues = (depthOfBook: DepthOfBook): BestBi
   return topBidOffers; 
 }
 
-export const convertBondDataToRowData = (depthOfBook: DepthOfBook, bondId: string): BestBidOffer[] => {
+export const getingSingleBondWithQuotes = (depthOfBook: DepthOfBook, bondId: string): BestBidOffer[] => {
   if (!bondId) return []; 
 
   const { bondName, bids, offers, } = depthOfBook[bondId];
-  const detailLength = Math.max(bids.length, offers.length);
+  const maxLength = Math.max(bids.length, offers.length);
 
   let bondData: BestBidOffer[] = [];
-  for (let i = 0; i < detailLength; i++) {
+  for (let i = 0; i < maxLength; i++) {
+    
+    // This code is for AgGrid mutabilit
+    const agId = (bids[i]?.quoteId + offers[i]?.quoteId) || keyGen();;
+
     bondData.push({
       bondId,
       bondName,
+      agId,
       bid: bids[i],
       offer: offers[i],
     });
