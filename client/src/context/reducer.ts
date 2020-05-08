@@ -30,6 +30,12 @@ export const quoteBookReducer = (state: ReducerState, action: any): any => {
     case actionTypes.INITIALIZE_BOND_MASTER:
       return { ...state, bondMaster: action.payload }
 
+    case actionTypes.RECONCILE_QUOTEBOOK:
+      action.payload.forEach((quote: BondQuote) => {
+        addNewQuoteToBook(state, quote);
+      })
+      return state
+
     case actionTypes.INITIALIZE_DEPTH_OF_BOOK:
       depthOfBook = action.payload.reduce((acc: DepthOfBook, bondItem: BondMaster) => {
         acc[bondItem.id] = {
@@ -42,12 +48,6 @@ export const quoteBookReducer = (state: ReducerState, action: any): any => {
         return acc;
       }, {});
       return { ...state, depthOfBook };
-
-    case actionTypes.RECONCILE_QUOTEBOOK:
-      action.payload.forEach((quote: BondQuote) => {
-        addNewQuoteToBook(state, quote);
-      })
-      return { ...state, }
 
     default:
       return state;

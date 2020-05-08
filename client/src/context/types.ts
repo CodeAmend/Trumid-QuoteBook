@@ -96,6 +96,7 @@ export interface BestBidOffer {
 export type DepthOfBookItem = {
   bondId: string;
   bondName: string;
+  ready?: boolean;
   agId: string;
   bids: QuoteFigures[];
   offers: QuoteFigures[];
@@ -119,6 +120,7 @@ export interface QuoteBookContext {
   bondMaster: BondMaster[];
   selectedBond: string;
   setSelectedBond: (boindId: string) => void;
+  // bestBidOfferUpdate: BestBidOffer;
 }
 
 export type BondViewProps = {
@@ -137,4 +139,5 @@ export interface QuoteBookHooks {
   depthOfBook: DepthOfBook;
   bestBidOffer: BestBidOffer[];
   selectedBondData: BondViewProps[];
+  // bestBidOfferUpdate: BestBidOffer;
 }

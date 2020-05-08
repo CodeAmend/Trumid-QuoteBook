@@ -36,6 +36,7 @@ export const context = React.createContext<QuoteBookContext>(initialQuoteBookCon
 export const Provider = (props: { children: ReactNode }) => {
   const [quoteBook, setQuoteBook] = React.useState<BondQuote[]>([]);
   const [reducerState, dispatch] = React.useReducer(quoteBookReducer, initialReducerState);
+
   const { accountMaster, bondMaster } = reducerState;
   const [selectedBond, setSelectedBond] = React.useState<string>('')
 
@@ -86,6 +87,7 @@ export const Provider = (props: { children: ReactNode }) => {
       socket.emit('quoteBook.subscribe');
     }
   }, [quoteBook]);
+
 
   const otherState = { selectedBond, setSelectedBond }
 

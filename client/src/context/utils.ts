@@ -27,9 +27,10 @@ export const byPrice = sorter('price');
 export const addNewQuoteToBook = (state: ReducerState, quote: BondQuote): DepthOfBook => {
   const { accountMaster, depthOfBook: book } = state;
   const { qty, price, bondId, accountId } = quote;
-  const client = accountMaster[accountId].name;
+  const { name } = accountMaster[accountId];
+
   const item = book[bondId];
-  const figures: QuoteFigures = { client, qty, price, quoteId: quote.id };
+  const figures: QuoteFigures = { client: name, qty, price, quoteId: quote.id };
 
   if (quote.side === 'B') {
     item.bids.push(figures)
@@ -37,6 +38,10 @@ export const addNewQuoteToBook = (state: ReducerState, quote: BondQuote): DepthO
   } else { // Side === 'S'
     item.offers.push(figures);
   }
+
+  // TODO: figure a better way to not hack this
+  // I currently need this because I need to see when this was updated the first time.
+  item.ready = true;
   return book;
 }
 
@@ -72,21 +77,29 @@ export const removeQuoteFromBook = (state: ReducerState, quote: BondQuote) => {
   return depthOfBook;
 }
 
+const agGridKeyGen = (bid: QuoteFigures, offer: QuoteFigures) => {
+  const quoteIdString = (bid?.quoteId || '') + (offer?.quoteId || '');
+  const finalPass = quoteIdString || keyGen();
+  return finalPass;
+}
+
 export const getBondsWithBestQuotes = (depthOfBook: DepthOfBook): BestBidOffer[] => {
   const topBidOffers: BestBidOffer[] = [];
+
+  if (!Object.keys(depthOfBook).length) {
+    return [];
+  }
 
   for (let [, { bondName, bids, offers, bondId }] of Object.entries(depthOfBook)) {
     const showBondsWithoutData = true;
     if (bids.length || offers.length || showBondsWithoutData) {
       const bestBid: QuoteFigures = bids.sort(byPrice)[0];
       const bestOffer: QuoteFigures = offers.sort(byPrice)[0];
-      // console.log(bestBid + '', bestOffer + '')
-      const agId = (bestBid?.quoteId + bestBid?.quoteId) || keyGen();
 
       topBidOffers.push({
         bondName,
         bondId,
-        agId,
+        agId: agGridKeyGen(bestBid, bestOffer),
         bid: bestBid || null,
         offer: bestOffer || null,
       })
@@ -103,16 +116,15 @@ export const getingSingleBondWithQuotes = (depthOfBook: DepthOfBook, bondId: str
 
   let bondData: BestBidOffer[] = [];
   for (let i = 0; i < maxLength; i++) {
+    const bid = bids[i];
+    const offer = offers[i];
     
-    // This code is for AgGrid mutabilit
-    const agId = (bids[i]?.quoteId + offers[i]?.quoteId) || keyGen();;
-
     bondData.push({
       bondId,
       bondName,
-      agId,
-      bid: bids[i],
-      offer: offers[i],
+      bid,
+      offer,
+      agId: agGridKeyGen(bid, offer),
     });
   }
   return bondData;
