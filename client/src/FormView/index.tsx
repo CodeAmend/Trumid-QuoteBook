@@ -6,13 +6,15 @@ import { useQuotebook } from '../context/hooks';
 
 type SelectItem = { value: string, label: string };
 
+type Action = { action: 'N' | 'U' | 'C' }
 
-const initialFormState: CreateQuote = {
+const initialFormState: CreateQuote & Action = {
   bondId: '',
   side: 'B',
   accountId: 0,
   price: 0,
   qty: 0,
+  action: 'N',
 }
 
 function FormView() {
@@ -42,7 +44,13 @@ function FormView() {
     }, []);
   }, [bondMaster.length, depthOfBook]);
 
-  const [formState, setFormState] = React.useState<CreateQuote>(initialFormState);
+  const actionSelectItems = [
+    { value: 'N', label: 'New' },
+    { value: 'U', label: 'Update' },
+    { value: 'C', label: 'Cancel' },
+  ];
+
+  const [formState, setFormState] = React.useState<CreateQuote & Action>(initialFormState);
 
   React.useEffect(() => {
     if (!selectedBond) {
@@ -51,7 +59,7 @@ function FormView() {
 
   }, [selectedBond]);
 
-  const handleSelect =({ target }): void => {
+  const handlFormChange =({ target }): void => {
     setFormState(prev => ({
       ...prev,
       [target.name]: target.value,
@@ -63,15 +71,23 @@ function FormView() {
   }
 
 
-  const handleAddOrder = (): void => {
-    const { bondId, side, accountId, price, qty } = formState;
-    createQuote({
-      accountId: Number(accountId),
-      bondId: bondId || bondSelectItems[0].value,
-      side,
-      price: Number(price),
-      qty: Number(qty) * 1000000,
-    });
+  const handleOrderType = (): void => {
+    const { bondId, side, accountId, price, qty, action } = formState;
+    switch (action) {
+      case 'N':
+        createQuote({
+          accountId: Number(accountId),
+          bondId: bondId || bondSelectItems[0].value,
+          side,
+          price: Number(price),
+          qty: Number(qty) * 1000000,
+        });
+        break;
+      case 'U':
+        throw 'Not implemented';
+      case 'C':
+        throw 'Not implemented';
+    }
   }
 
   const disabled: boolean = !(formState.bondId && formState.price > 0 && formState.qty > 0);
@@ -80,15 +96,24 @@ function FormView() {
     <form>
       
       {!!formState.bondId && (
+        <>
         <button
           disabled={disabled}
           type="button"
           style={{ marginRight: '1rem' }}
-          onClick={handleAddOrder}
+          onClick={handleOrderType}
         >Add</button>
+
+        <select name="action" value={formState.action} onChange={handlFormChange}>
+          {actionSelectItems.length && actionSelectItems.map(({ value, label }) => (
+            <option key={value} value={value}>{label}</option>
+          ))}
+        </select>
+        </>
       )}
 
-      <select name="bondId" value={formState.bondId} onChange={handleSelect}>
+
+      <select name="bondId" value={formState.bondId} onChange={handlFormChange}>
       {!formState.bondId && <option>Select a Bond</option>}
         {bondSelectItems.length && bondSelectItems.map(({ value, label }) => (
           <option key={value} value={value}>{label}</option>
@@ -97,22 +122,26 @@ function FormView() {
 
       {!!formState.bondId && (
         <>
-        <select value={formState.accountId} onChange={handleSelect}>
+        <select value={formState.accountId} onChange={handlFormChange}>
           {accountSelectItems.length && accountSelectItems.map(({ value, label }) => (
             <option key={value} value={value}>{label}</option>
           ))}
         </select>
 
-        <select value={formState.side} onChange={handleSelect}>
+        <select value={formState.side} onChange={handlFormChange}>
           <option value="B">Bid</option>
           <option value="S">Offer</option>
         </select>
         
-        <label htmlFor="qty">Qty (in millions):</label>
-        <input onChange={handleSelect} value={formState.qty} type="number" id="qty" name="qty" />
+        {formState.action !== 'C' && (
+          <>
+          <label htmlFor="qty">Qty (in millions):</label>
+          <input onChange={handlFormChange} value={formState.qty} type="number" id="qty" name="qty" />
 
-        <label htmlFor="price">Price: $</label>
-        <input onChange={handleSelect} value={formState.price} type="number" id="price" name="price" />
+          <label htmlFor="price">Price: $</label>
+          <input onChange={handlFormChange} value={formState.price} type="number" id="price" name="price" />
+          </>
+        )}
         </>
       )}
 

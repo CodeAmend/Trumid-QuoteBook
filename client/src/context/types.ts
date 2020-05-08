@@ -41,6 +41,11 @@ export interface CreateQuote {
   requestId?: string;
 }
 
+export interface CancelQuote {
+  requestId: string;
+  quoteId: string;
+}
+
 export interface ReplaceQuote {
   price: number;
   qty: number;
@@ -57,11 +62,6 @@ export interface QuoteAccepted {
 export interface QuoteRejected {
   errors: string[];
   requestId: string;
-}
-
-export interface CancelQuote {
-  requestId: string;
-  quoteId: string;
 }
 
 export type QuoteFigures = {
