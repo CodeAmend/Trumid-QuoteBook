@@ -75,6 +75,7 @@ function FormView() {
     const { bondId, side, accountId, price, qty, action } = formState;
     switch (action) {
       case 'N':
+        console.log(side)
         createQuote({
           accountId: Number(accountId),
           bondId: bondId || bondSelectItems[0].value,

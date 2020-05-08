@@ -18,6 +18,12 @@
 * Show list of quotes added
 * add functionality to update and cancel. (Will have to think of architection and UX)
 
+### Bugs!!!
+* Add mutliple quotes of same client and does not combine, (ask Trumid team about this)
+* Rendering error with AgGrid (throws nast red error about )
+* When you select a bond by clicking table, select box value is not set
+
+
 
 ### Extremely useful notes
 AgGrid has a few issues
