@@ -23,13 +23,12 @@ const sorter = (sortType: string) => (a: any, b: any) => {
 
 export const byPrice = sorter('price');
 
-
 export const addNewQuoteToBook = (state: ReducerState, quote: BondQuote): DepthOfBook => {
   const { accountMaster, depthOfBook: book } = state;
   const { qty, price, bondId, accountId } = quote;
   const client = accountMaster[accountId].name;
   const item = book[bondId];
-  const figures: QuoteFigures = { client, qty, price };
+  const figures: QuoteFigures = { client, qty, price, quoteId: quote.id };
 
   if (quote.side === 'B') {
     item.bids.push(figures)
@@ -46,7 +45,7 @@ export const updateQuoteOnBook = (state: ReducerState, quote: BondQuote): DepthO
   const client = accountMaster[accountId].name;
   const item = depthOfBook[bondId];
 
-  const figures: QuoteFigures = { client, qty, price };
+  const figures: QuoteFigures = { client, qty, price, quoteId: quote.id };
 
   // TODO: Refactor this messy code!!!
   if (quote.side === 'B') {

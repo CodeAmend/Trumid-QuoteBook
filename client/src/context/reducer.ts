@@ -37,7 +37,6 @@ export const quoteBookReducer = (state: ReducerState, action: any): any => {
           bids: [],
           offers: [],
         };
-
         return acc;
       }, {});
       return { ...state, depthOfBook };

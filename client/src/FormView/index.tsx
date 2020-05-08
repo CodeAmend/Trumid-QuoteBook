@@ -63,9 +63,9 @@ function FormView() {
         });
         break;
       case 'U':
-        throw 'Not implemented';
+        throw new Error('Not implemented');
       case 'C':
-        throw 'Not implemented';
+        throw new Error('Not implemented');
     }
   }
 

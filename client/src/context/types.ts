@@ -74,6 +74,7 @@ export type QuoteFigures = {
   qty: number;
   price: number;
   client: string;
+  quoteId: string;
 }
 
 export type BondsByBondIdKey = {
