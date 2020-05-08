@@ -5,6 +5,19 @@
 * `npm run server` run server
 * `npm run dev` run both client and server concurrently
 
+### Basic Usage
+* The Main Screen that greets you is `All Bond View`
+* At the top is a Add (createQuote) form
+  * `Add` button is disabled until all input fields are filled in
+* If you change the `bond` select field, you will be taken to a Bond View page with more detail.
+* You can select `quote types` such as New, Update, Cancel
+  * Update and Cancel are not implemented yet
+
+
+### Next up
+* Show list of quotes added
+* add functionality to update and cancel. (Will have to think of architection and UX)
+
 
 ### Extremely useful notes
 AgGrid has a few issues
