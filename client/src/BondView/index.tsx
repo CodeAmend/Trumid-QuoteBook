@@ -11,14 +11,14 @@ import Table from '../Table';
 const BondView = () => {
   const { depthOfBook, selectedBond, selectedBondData } = useQuotebook();
 
-  if (!selectedBond) {
-    return null;
-  }
-
   const onCellClicked = ({ data, column }: CellClickedEvent) => {
     const colGroupName = column.getColId().split('.')[0];
     const { quoteId } = data[colGroupName];
     console.log(quoteId)
+  }
+
+  if (!selectedBond) {
+    return null;
   }
 
   return(
@@ -28,6 +28,7 @@ const BondView = () => {
         <p><strong>Name: </strong>{depthOfBook[selectedBond].bondName}</p>
       </Header>
       <Table
+        // onGridReady={onGridReady}
         columnDefs={columnDefs}
         rowData={selectedBondData}
         onCellClicked={onCellClicked}

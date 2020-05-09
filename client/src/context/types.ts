@@ -88,7 +88,6 @@ export type BondsByBondIdKey = {
 export interface BestBidOffer {
   bondName: string;
   bondId: string;
-  agId: string;
   bid: QuoteFigures; 
   offer: QuoteFigures; 
 }
@@ -96,7 +95,7 @@ export interface BestBidOffer {
 export type DepthOfBookItem = {
   bondId: string;
   bondName: string;
-  agId: string;
+  ready?: boolean;
   bids: QuoteFigures[];
   offers: QuoteFigures[];
 }
@@ -114,11 +113,12 @@ export type ReducerState = {
 export interface QuoteBookContext {
   socket: any;
   dispatch: any;
+  selectedBond: string;
+  setSelectedBond: (boindId: string) => void;
   depthOfBook: DepthOfBook;
   accountMaster: AccountMaster[];
   bondMaster: BondMaster[];
-  selectedBond: string;
-  setSelectedBond: (boindId: string) => void;
+  latestBondId: string;
 }
 
 export type BondViewProps = {
@@ -135,6 +135,7 @@ export interface QuoteBookHooks {
   accountMaster: AccountMaster[];
   setSelectedBond: (bondId: string) => void;
   depthOfBook: DepthOfBook;
-  bestBidOffer: BestBidOffer[];
   selectedBondData: BondViewProps[];
+  bestBidOffer: BestBidOffer[];
+  latestBondId: string;
 }

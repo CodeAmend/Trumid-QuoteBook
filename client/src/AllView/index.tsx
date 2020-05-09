@@ -1,23 +1,43 @@
 import React from "react"
-import { CellClickedEvent } from 'ag-grid-community';
+import {
+  GridApi,
+  CellClickedEvent,
+  GridReadyEvent,
+} from 'ag-grid-community';
 import { useQuotebook } from '../context/hooks';
-
-import Table from '../Table';
 import { columnDefs } from './columnDefs';
 
+import Table from '../Table';
 import { ViewWrapper, Header } from './styles';
 
 
+
 const AllView = () => {
-  const { selectedBond, bestBidOffer, setSelectedBond } = useQuotebook();
+  const { selectedBond, setSelectedBond, latestBondId, bestBidOffer } = useQuotebook();
+  const gridApi = React.useRef<GridApi>();
 
-  if (selectedBond)  {
-    return null;
-  };
+  const onGridReady = ({ api }: GridReadyEvent): void => {
+    gridApi.current = api;
+    api.setRowData(bestBidOffer);
+  }
 
-  const onCellClicked = ({ data }: CellClickedEvent) => {
+  const onCellClicked = ({ data }: CellClickedEvent): void => {
     setSelectedBond(data.bondId)
   }
+
+  // Watch for latest bondId and call for update
+  React.useEffect(() => {
+    const latestRow = bestBidOffer.find(b => b.bondId === latestBondId);
+    if (latestRow) {
+      gridApi.current?.applyTransactionAsync({ update: [latestRow]});
+    }
+  }, [latestBondId]);
+
+  // If we make sure we have at least one update,
+  // bestBidOffer will already be populated, so okay to render
+  if (selectedBond || !latestBondId)  {
+    return null;
+  };
 
   return (
     <ViewWrapper>
@@ -25,8 +45,8 @@ const AllView = () => {
         <h1>All Bond View</h1>
       </Header>
       <Table
+        onGridReady={onGridReady}
         columnDefs={columnDefs}
-        rowData={bestBidOffer}
         onCellClicked={onCellClicked}
       />
     </ViewWrapper>

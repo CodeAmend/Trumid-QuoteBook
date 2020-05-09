@@ -17,6 +17,7 @@ export const useQuotebook = (): QuoteBookHooks => {
     setSelectedBond,
     bondMaster,
     accountMaster,
+    latestBondId,
   } = React.useContext(quoteBookContext.context)
 
   const createQuote = (request: CreateQuote) => {
@@ -57,7 +58,8 @@ export const useQuotebook = (): QuoteBookHooks => {
     bondMaster,
     accountMaster,
     selectedBondData: getingSingleBondWithQuotes(depthOfBook, selectedBond),
-    bestBidOffer: getBondsWithBestQuotes(depthOfBook)
+    bestBidOffer: getBondsWithBestQuotes(depthOfBook),
+    latestBondId,
   }
 }
 

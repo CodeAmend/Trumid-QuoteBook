@@ -1,19 +1,12 @@
 import React from "react"
+import { AgGridReact, AgGridReactProps } from 'ag-grid-react';
 import { GridSizeChangedEvent } from 'ag-grid-community';
 import { DepthOfBookItem } from '../context/types';
-import { AgGridReact } from 'ag-grid-react';
+
 import { AgWraper } from './styles';
 
 
-type TableProps = {
-  onCellClicked?: (params: any) => void;
-  columnDefs: any;
-  rowData: any;
-}
-
-const Table = (props: TableProps) => {
-
-  // TODO: what type is this!?
+const Table = (props: AgGridReactProps) => {
   const onGridSizeChanged = (params: GridSizeChangedEvent) => {
     var gridWidth = document.getElementById('grid-wrapper')?.offsetWidth || 0;
     const columnsToShow: any = [];
@@ -33,15 +26,15 @@ const Table = (props: TableProps) => {
     params.api.sizeColumnsToFit();
   }
 
-  const getRowNodeId = ({ agId }: DepthOfBookItem) => {
-    return agId;
+  const getRowNodeId = (params: DepthOfBookItem): string => {
+    return params.bondId;
   }
 
   return(
     <AgWraper className="ag-theme-balham-dark">
       <AgGridReact
         {...props}
-        immutableData={true}
+        // immutableData={true}
         getRowNodeId={getRowNodeId}
         onGridSizeChanged={onGridSizeChanged}
         suppressScrollOnNewData={true}
