@@ -5,7 +5,6 @@ import {
   GridReadyEvent,
 } from 'ag-grid-community';
 import { useQuotebook } from '../context/hooks';
-import { DepthOfBookItem } from '../context/types';
 import { columnDefs } from './columnDefs';
 
 import Table from '../Table';
@@ -17,21 +16,9 @@ const AllView = () => {
   const { selectedBond, setSelectedBond, latestBondId, bestBidOffer } = useQuotebook();
   const gridApi = React.useRef<GridApi>();
 
-  // TODO: set 
   const onGridReady = ({ api }: GridReadyEvent): void => {
     gridApi.current = api;
     api.setRowData(bestBidOffer);
-  }
-
-  const getRowNodeId = (params: DepthOfBookItem): string => {
-    return params.bondId;
-  }
-
-  const updateLatestRowChange = (): void => {
-    const latestRow = bestBidOffer.find(b => b.bondId === latestBondId);
-    if (latestRow) {
-      gridApi.current?.applyTransactionAsync({ update: [latestRow]});
-    }
   }
 
   const onCellClicked = ({ data }: CellClickedEvent): void => {
@@ -39,9 +26,15 @@ const AllView = () => {
   }
 
   // Watch for latest bondId and call for update
-  React.useEffect(updateLatestRowChange, [latestBondId]);
+  React.useEffect(() => {
+    const latestRow = bestBidOffer.find(b => b.bondId === latestBondId);
+    if (latestRow) {
+      gridApi.current?.applyTransactionAsync({ update: [latestRow]});
+    }
+  }, [latestBondId]);
 
-
+  // If we make sure we have at least one update,
+  // bestBidOffer will already be populated, so okay to render
   if (selectedBond || !latestBondId)  {
     return null;
   };
@@ -53,7 +46,6 @@ const AllView = () => {
       </Header>
       <Table
         onGridReady={onGridReady}
-        getRowNodeId={getRowNodeId}
         columnDefs={columnDefs}
         onCellClicked={onCellClicked}
       />

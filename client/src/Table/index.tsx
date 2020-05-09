@@ -1,6 +1,7 @@
 import React from "react"
 import { AgGridReact, AgGridReactProps } from 'ag-grid-react';
 import { GridSizeChangedEvent } from 'ag-grid-community';
+import { DepthOfBookItem } from '../context/types';
 
 import { AgWraper } from './styles';
 
@@ -25,12 +26,16 @@ const Table = (props: AgGridReactProps) => {
     params.api.sizeColumnsToFit();
   }
 
+  const getRowNodeId = (params: DepthOfBookItem): string => {
+    return params.bondId;
+  }
 
   return(
     <AgWraper className="ag-theme-balham-dark">
       <AgGridReact
         {...props}
         // immutableData={true}
+        getRowNodeId={getRowNodeId}
         onGridSizeChanged={onGridSizeChanged}
         suppressScrollOnNewData={true}
       />
