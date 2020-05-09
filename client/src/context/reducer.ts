@@ -4,7 +4,6 @@ import {
   addNewQuoteToBook,
   updateQuoteOnBook,
   removeQuoteFromBook,
-  keyGen,
 } from './utils';
 
 
@@ -42,7 +41,6 @@ export const quoteBookReducer = (state: ReducerState, action: any): any => {
         acc[bondItem.id] = {
           bondId: bondItem.id,
           bondName: bondItem.name,
-          agId: keyGen(),
           bids: [],
           offers: [],
         };

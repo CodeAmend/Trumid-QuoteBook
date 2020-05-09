@@ -77,12 +77,6 @@ export const removeQuoteFromBook = (state: ReducerState, quote: BondQuote) => {
   return depthOfBook;
 }
 
-const agGridKeyGen = (bid: QuoteFigures, offer: QuoteFigures) => {
-  const quoteIdString = (bid?.quoteId || '') + (offer?.quoteId || '');
-  const finalPass = quoteIdString || keyGen();
-  return finalPass;
-}
-
 export const getBondsWithBestQuotes = (depthOfBook: DepthOfBook): BestBidOffer[] => {
   const topBidOffers: BestBidOffer[] = [];
 
@@ -99,7 +93,6 @@ export const getBondsWithBestQuotes = (depthOfBook: DepthOfBook): BestBidOffer[]
       topBidOffers.push({
         bondName,
         bondId,
-        agId: agGridKeyGen(bestBid, bestOffer),
         bid: bestBid || null,
         offer: bestOffer || null,
       })
@@ -124,7 +117,6 @@ export const getingSingleBondWithQuotes = (depthOfBook: DepthOfBook, bondId: str
       bondName,
       bid,
       offer,
-      agId: agGridKeyGen(bid, offer),
     });
   }
   return bondData;
