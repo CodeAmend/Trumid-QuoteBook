@@ -1,11 +1,11 @@
 import React from "react"
-import { AgGridReact } from 'ag-grid-react';
+import { AgGridReact, AgGridReactProps } from 'ag-grid-react';
 import { GridSizeChangedEvent } from 'ag-grid-community';
 
 import { AgWraper } from './styles';
 
 
-const Table = (props: any) => {
+const Table = (props: AgGridReactProps) => {
   const onGridSizeChanged = (params: GridSizeChangedEvent) => {
     var gridWidth = document.getElementById('grid-wrapper')?.offsetWidth || 0;
     const columnsToShow: any = [];

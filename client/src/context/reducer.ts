@@ -14,15 +14,16 @@ export const quoteBookReducer = (state: ReducerState, action: any): any => {
   switch (action.type) {
     case actionTypes.QUOTE_CREATE:
       addNewQuoteToBook(state, action.payload);
-      return { ...state }
+      return { ...state, latestBondId: action.payload.bondId }
 
     case actionTypes.QUOTE_UPDATE:
       updateQuoteOnBook(state, action.payload);
-      return { ...state }
+      
+      return { ...state, latestBondId: action.payload.bondId }
 
     case actionTypes.QUOTE_CANCEL:
       removeQuoteFromBook(state, action.payload);
-      return { ...state }
+      return { ...state, latestBondId: action.payload.bondId }
 
     case actionTypes.INITIALIZE_ACCOUNT_MASTER:
       return { ...state, accountMaster: action.payload }

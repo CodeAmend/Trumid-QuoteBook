@@ -22,12 +22,14 @@ const initialQuoteBookContext = {
   bondMaster: [],
   selectedBond: '',
   setSelectedBond: () => {},
+  latestBondId: '',
 };
 
 const initialReducerState = {
   depthOfBook: {},
   accountMaster: [],
   bondMaster: [],
+  latestBondId: '',
 };
 
 export const context = React.createContext<QuoteBookContext>(initialQuoteBookContext);

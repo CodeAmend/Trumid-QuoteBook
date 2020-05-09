@@ -1,36 +1,50 @@
 import React from "react"
-import { CellClickedEvent, GridReadyEvent } from 'ag-grid-community';
+import {
+  GridApi,
+  CellClickedEvent,
+  GridReadyEvent,
+} from 'ag-grid-community';
 import { useQuotebook } from '../context/hooks';
 import { DepthOfBookItem } from '../context/types';
+import { columnDefs } from './columnDefs';
 
 import Table from '../Table';
 import { ViewWrapper, Header } from './styles';
 
-import { columnDefs } from './columnDefs';
-
 
 
 const AllView = () => {
-  const { selectedBond, setSelectedBond, bestBidOffer } = useQuotebook();
-
-  if (selectedBond)  {
-    return null;
-  };
-
-  const onCellClicked = ({ data }: CellClickedEvent) => {
-    setSelectedBond(data.bondId)
-  }
-
-  // const applyTransactionAsync = { update: [recentBondUpdate]}
+  const { selectedBond, setSelectedBond, latestBondId, bestBidOffer } = useQuotebook();
+  const gridApi = React.useRef<GridApi>();
 
   // TODO: set 
-  const onGridReady = ({ api }: GridReadyEvent) => {
+  const onGridReady = ({ api }: GridReadyEvent): void => {
+    gridApi.current = api;
     api.setRowData(bestBidOffer);
   }
 
-  const getRowNodeId = ({ agId }: DepthOfBookItem) => {
-    return agId;
+  const getRowNodeId = (params: DepthOfBookItem): string => {
+    return params.bondId;
   }
+
+  const updateLatestRowChange = (): void => {
+    const latestRow = bestBidOffer.find(b => b.bondId === latestBondId);
+    if (latestRow) {
+      gridApi.current?.applyTransactionAsync({ update: [latestRow]});
+    }
+  }
+
+  const onCellClicked = ({ data }: CellClickedEvent): void => {
+    setSelectedBond(data.bondId)
+  }
+
+  // Watch for latest bondId and call for update
+  React.useEffect(updateLatestRowChange, [latestBondId]);
+
+
+  if (selectedBond || !latestBondId)  {
+    return null;
+  };
 
   return (
     <ViewWrapper>
@@ -39,7 +53,6 @@ const AllView = () => {
       </Header>
       <Table
         onGridReady={onGridReady}
-        // applyTransactionAsync={applyTransactionAsync}
         getRowNodeId={getRowNodeId}
         columnDefs={columnDefs}
         onCellClicked={onCellClicked}
