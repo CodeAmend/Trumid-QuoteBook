@@ -1,4 +1,4 @@
-import { ReducerState, BondQuote } from './types';
+import { ReducerState } from './types';
 import { actionTypes } from './actions';
 import {
   addNewQuoteToBook,
