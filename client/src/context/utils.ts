@@ -145,19 +145,22 @@ export const updateQuoteOnBook = (state: ReducerState, quote: BondQuote): DepthO
   return depthOfBook;
 }
 
-// export const removeQuoteFromBook = (state: ReducerState, quote: BondQuote): DepthOfBook[] => {
-//   const { accountMaster, depthOfBook } = state;
-//   const { accountId, side, bondId } = quote;
-//   const clientName = accountMaster[accountId].name;
+export const removeQuoteFromBook = (state: ReducerState, quote: BondQuote): DepthOfBook[] => {
+  const { accountMaster, depthOfBook } = state;
+  const { accountId, side, bondId } = quote;
+  const clientName = accountMaster[accountId].name;
 
-//   const item = depthOfBook[bondId];
-//   if (side === 'B') {
-//     item.bids = item.bids.filter(bid => bid.client !== clientName);
-//   } else {
-//     item.offers = item.offers.filter(offer => offer.client !== clientName);
-//   }
-//   return depthOfBook;
-// }
+  const bondIndex = state.bondMasterKeyBook[bondId];
+  const currentBond: DepthOfBook = depthOfBook[bondIndex];
+  let { bids, offers } = currentBond;
+
+  if (side === 'B') {
+    currentBond.bids = bids.filter(bid => bid.client !== clientName);
+  } else {
+    currentBond.offers = offers.filter(offer => offer.client !== clientName);
+  }
+  return depthOfBook;
+}
 
 // export const getBondsWithBestQuotes = (depthOfBook: DepthOfBook): BestBidOffer[] => {
 //   const topBidOffers: BestBidOffer[] = [];

@@ -3,7 +3,7 @@ import { actionTypes } from './actions';
 import {
   addNewQuoteToBook,
   updateQuoteOnBook,
-  // removeQuoteFromBook,
+  removeQuoteFromBook,
   createDepthOfBookTemplate,
   reconcileQuotebook,
 } from './utils';
@@ -49,13 +49,11 @@ export const quoteBookReducer = (state: ReducerState, action: any): any => {
       updateQuoteOnBook(state, payload);
       return { ...state, latestBondId: payload.bondId }
 
-    // case actionTypes.QUOTE_CANCEL:
-    //   removeQuoteFromBook(state, payload);
-    //   return { ...state, latestBondId: payload.bondId }
+    case actionTypes.QUOTE_CANCEL:
+      removeQuoteFromBook(state, payload);
+      return { ...state, latestBondId: payload.bondId }
 
     default:
       return state;
   }
-
-  return state;
 }
