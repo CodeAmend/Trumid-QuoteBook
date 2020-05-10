@@ -67,6 +67,7 @@ export const useQuotebook = (): QuoteBookHooks => {
     // bestBidOffer: getBondsWithBestQuotes(depthOfBook),
     latestBondId,
     userQuotes,
+    bondMasterKeyBook,
   }
 }
 

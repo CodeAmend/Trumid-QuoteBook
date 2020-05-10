@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import AllView from './AllView';
 import BondView from './BondView';
-import FormView from './FormView';
+// import FormView from './FormView';
 
 
 const Container = styled.section`
@@ -17,10 +17,9 @@ const QuoteBookApp = () => {
   return (
     <Container>
       <AllView />
+      <BondView />
     </Container>
   );
 }
 
 export default QuoteBookApp;
-      // <FormView />
-      // <BondView />

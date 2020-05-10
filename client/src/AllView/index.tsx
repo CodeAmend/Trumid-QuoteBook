@@ -4,6 +4,7 @@ import {
   CellClickedEvent,
   GridReadyEvent,
 } from 'ag-grid-community';
+import { DepthOfBook } from '../context/types';
 import { useQuotebook } from '../context/hooks';
 import { columnDefs } from './columnDefs';
 
@@ -12,16 +13,19 @@ import { ViewWrapper, Header } from './styles';
 
 
 const AllView = () => {
-  const { latestBondId, getBookItemByBondId, setSelectedBond, depthOfBook } = useQuotebook();
+  const { selectedBond, latestBondId, getBookItemByBondId, setSelectedBond, depthOfBook } = useQuotebook();
   const gridApi = React.useRef<GridApi>();
 
-   React.useEffect(() => {
-     if (depthOfBook[0]) {
-       const bookItem = getBookItemByBondId(latestBondId);
-       gridApi.current?.applyTransaction({ update: depthOfBook })
-     }
-   }, [latestBondId]);
-  
+  React.useEffect(() => {
+    if (depthOfBook[0]) {
+      const bookItem = getBookItemByBondId(latestBondId);
+      gridApi.current?.applyTransaction({ update: [bookItem] })
+    }
+  }, [latestBondId]);
+
+  if (selectedBond) {
+    return null;
+  }
 
   const onGridReady = ({ api }: GridReadyEvent): void => {
     gridApi.current = api;
@@ -32,6 +36,11 @@ const AllView = () => {
     setSelectedBond(data.bondId)
   }
 
+  const getRowNodeId = (params: DepthOfBook): string => {
+    return params.bondId;
+  }
+
+
   return (
     <ViewWrapper>
       <Header>
@@ -40,6 +49,7 @@ const AllView = () => {
 
       {depthOfBook.length && (
         <Table
+          getRowNodeId={getRowNodeId}
           onGridReady={onGridReady}
           columnDefs={columnDefs}
           onCellClicked={onCellClicked}

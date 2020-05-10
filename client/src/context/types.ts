@@ -148,5 +148,6 @@ export interface QuoteBookHooks {
   latestBondId: string;
   userQuotes: UserQuote[];
   getBookItemByBondId: (bondId: string) => DepthOfBook;
+  bondMasterKeyBook: BondMasterKeyBook;
 }
 
