@@ -48,6 +48,7 @@ export const reconcileWithMasters = (state: ReducerState, data: QuoteAccepted): 
     qty: quote.qty,
     price: quote.price,
     requestId,
+    quoteId: quote.id,
   }
 }
 

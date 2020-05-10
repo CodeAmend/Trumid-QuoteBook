@@ -57,7 +57,7 @@ export interface ReplaceQuote {
   price: number;
   qty: number;
   quoteId: string;
-  requestId: string;
+  requestId?: string;
 }
 
 export interface QuoteAccepted {
@@ -95,6 +95,7 @@ export type DepthOfBookItem = {
 
 export type UserQuote = {
   bondId: string;
+  quoteId: string;
   bondName: string;
   clientName: string;
   requestId: string;
@@ -135,7 +136,7 @@ export type BondViewProps = {
 export interface QuoteBookHooks {
   createQuote: (request: CreateQuote) => void;
   replaceQuote: (request: ReplaceQuote) => void;
-  cancelQuote: () => void;
+  cancelQuote: (requestId: string) => void;
   selectedBond: string;
   bondMaster: BondMaster[];
   accountMaster: AccountMaster[];

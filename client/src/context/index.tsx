@@ -42,7 +42,7 @@ export const context = React.createContext<QuoteBookContext>(initialQuoteBookCon
 
 export const Provider = (props: { children: ReactNode }) => {
   const [quoteBook, setQuoteBook] = React.useState<BondQuote[]>([]);
-  const [userQuotes, setUserQuotes] = React.useState<UserQuote[]>([])
+  const [userQuotes, setUserQuotes] = React.useState<UserQuote[]>([]);
   const [reducerState, dispatch] = React.useReducer(quoteBookReducer, initialReducerState);
 
   const { accountMaster, bondMaster } = reducerState;
@@ -98,7 +98,6 @@ export const Provider = (props: { children: ReactNode }) => {
       socket.on('quoteAccepted', (quoteAccepted: QuoteAccepted) => {
         const { action, requestId } = quoteAccepted;
         const newUserQuote = reconcileWithMasters(reducerState, quoteAccepted);
-
         if (action === 'N') {
           // TODO: Dispatch toast message
           console.log("N", newUserQuote)
@@ -117,6 +116,7 @@ export const Provider = (props: { children: ReactNode }) => {
         }
 
         if (action === 'C') {
+          console.log("cancelling...", quoteAccepted)
           // TODO: Dispatch toast message
           setUserQuotes(prev => prev.filter(uq => uq.requestId === requestId));
         }

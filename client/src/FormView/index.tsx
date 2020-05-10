@@ -8,7 +8,8 @@ import {
 } from './utils';
 
 import { useQuotebook } from '../context/hooks';
-// import { priceFormat, qtyFormat } from '../context/utils';
+
+import UserQuoteTable from './UserQuoteTable';
 
 
 function FormView() {
@@ -76,8 +77,9 @@ function FormView() {
   const disabled: boolean = !(formState.bondId && formState.price > 0 && formState.qty > 0);
 
   return(
+    <React.Fragment>
+
     <form>
-      
       {!!formState.bondId && (
         <>
         <button
@@ -136,6 +138,10 @@ function FormView() {
         >View All Bonds</button>
       )}
     </form>
+
+    {userQuotes.length > 0 && <UserQuoteTable />}
+
+    </React.Fragment>
   );
 }
 

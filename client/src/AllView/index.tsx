@@ -44,6 +44,7 @@ const AllView = () => {
       <Header>
         <h1>All Bond View</h1>
       </Header>
+      
       <Table
         onGridReady={onGridReady}
         columnDefs={columnDefs}

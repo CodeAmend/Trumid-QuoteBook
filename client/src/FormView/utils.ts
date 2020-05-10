@@ -25,8 +25,8 @@ export const initialFormState: CreateQuote & { action: Action } = {
   bondId: '',
   side: 'B',
   accountId: 0,
-  price: 0,
-  qty: 0,
+  price: 1,
+  qty: 1,
   action: 'N',
 }
 
