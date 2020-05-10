@@ -6,6 +6,7 @@ import {
   BestBidOffer,
   QuoteAccepted,
   UserQuote,
+  BondMaster,
 } from './types';
 
 export const keyGen = () => Math.random().toString(36).substr(2,5);
@@ -148,4 +149,16 @@ export const getingSingleBondWithQuotes = (depthOfBook: DepthOfBook, bondId: str
     });
   }
   return bondData;
+}
+
+export const createDepthOfBookTemplate = (bondMaster: BondMaster[]): DepthOfBook => {
+  return bondMaster.reduce((acc: DepthOfBook, bondItem: BondMaster) => {
+    acc[bondItem.id] = {
+      bondId: bondItem.id,
+      bondName: bondItem.name,
+      bids: [],
+      offers: [],
+    };
+    return acc;
+  }, {});
 }
