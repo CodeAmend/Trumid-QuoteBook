@@ -11,47 +11,40 @@ import Table from '../Table';
 import { ViewWrapper, Header } from './styles';
 
 
-
 const AllView = () => {
-  const { selectedBond, setSelectedBond, latestBondId, bestBidOffer } = useQuotebook();
+  const { latestBondId, getBookItemByBondId, setSelectedBond, depthOfBook } = useQuotebook();
   const gridApi = React.useRef<GridApi>();
+
+   React.useEffect(() => {
+     if (depthOfBook[0]) {
+       const bookItem = getBookItemByBondId(latestBondId);
+       gridApi.current?.applyTransaction({ update: depthOfBook })
+     }
+   }, [latestBondId]);
+  
 
   const onGridReady = ({ api }: GridReadyEvent): void => {
     gridApi.current = api;
-    api.setRowData(bestBidOffer);
+    api.setRowData(depthOfBook);
   }
 
   const onCellClicked = ({ data }: CellClickedEvent): void => {
     setSelectedBond(data.bondId)
   }
 
-  const checkIfShouldUpdate = () => {
-    const latestRow = bestBidOffer.find(b => b.bondId === latestBondId);
-    if (latestRow) {
-      gridApi.current?.applyTransactionAsync({ update: [latestRow]});
-    }
-  }
-
-  // Watch for latest bondId and call for update
-  React.useEffect(checkIfShouldUpdate, [latestBondId]);
-
-  // If we make sure we have at least one update,
-  // bestBidOffer will already be populated, so okay to render
-  if (selectedBond || !latestBondId)  {
-    return null;
-  };
-
   return (
     <ViewWrapper>
       <Header>
         <h1>All Bond View</h1>
       </Header>
-      
-      <Table
-        onGridReady={onGridReady}
-        columnDefs={columnDefs}
-        onCellClicked={onCellClicked}
-      />
+
+      {depthOfBook.length && (
+        <Table
+          onGridReady={onGridReady}
+          columnDefs={columnDefs}
+          onCellClicked={onCellClicked}
+        />
+      )}
     </ViewWrapper>
   )
 }

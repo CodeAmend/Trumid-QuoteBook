@@ -1,11 +1,12 @@
 import React from 'react';
 import quoteBookContext from '.';
-import { keyGen, getingSingleBondWithQuotes, getBondsWithBestQuotes } from './utils';
+import { keyGen } from './utils';
 import {
   QuoteBookHooks,
   ReplaceQuote,
   CreateQuote,
   CancelQuote,
+  DepthOfBook,
 } from './types';
 
 
@@ -16,6 +17,7 @@ export const useQuotebook = (): QuoteBookHooks => {
     selectedBond,
     setSelectedBond,
     bondMaster,
+    bondMasterKeyBook,
     accountMaster,
     latestBondId,
     userQuotes,
@@ -46,6 +48,11 @@ export const useQuotebook = (): QuoteBookHooks => {
     socket.emit('quote.cancel', request);
   }
 
+  const getBookItemByBondId = (bondId: string): DepthOfBook => {
+    const bookItemIndex = bondMasterKeyBook[bondId];
+    return depthOfBook[bookItemIndex];
+  }
+
   return {
     createQuote,
     replaceQuote,
@@ -55,8 +62,9 @@ export const useQuotebook = (): QuoteBookHooks => {
     setSelectedBond,
     bondMaster,
     accountMaster,
-    selectedBondData: getingSingleBondWithQuotes(depthOfBook, selectedBond),
-    bestBidOffer: getBondsWithBestQuotes(depthOfBook),
+    getBookItemByBondId,
+    // selectedBondData: getingSingleBondWithQuotes(depthOfBook, selectedBond),
+    // bestBidOffer: getBondsWithBestQuotes(depthOfBook),
     latestBondId,
     userQuotes,
   }

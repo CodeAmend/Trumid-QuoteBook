@@ -8,7 +8,7 @@ import Table from '../Table';
 
 
 const BondView = () => {
-  const { depthOfBook, selectedBond, selectedBondData } = useQuotebook();
+  const { depthOfBook, selectedBond } = useQuotebook();
 
   if (!selectedBond) {
     return null;
@@ -18,14 +18,14 @@ const BondView = () => {
     <ViewWrapper> 
       <Header>
         <h1>Bond View</h1>
-        <p><strong>Name: </strong>{depthOfBook[selectedBond].bondName}</p>
       </Header>
-      <Table
-        columnDefs={columnDefs}
-        rowData={selectedBondData}
-      />
     </ViewWrapper>
   )
 }
 
 export default BondView;
+        // <p><strong>Name: </strong>{depthOfBook[selectedBond].bondName}</p>
+      // <Table
+      //   columnDefs={columnDefs}
+      //   rowData={selectedBondData}
+      // />

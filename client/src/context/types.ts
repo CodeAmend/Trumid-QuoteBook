@@ -9,6 +9,10 @@ export type BondMaster = {
   name: string;
 }
 
+export type BondMasterKeyBook = {
+  [key: string]: number;
+}
+
 export type AccountMaster = {
   id: number;
   name: string;
@@ -85,7 +89,7 @@ export interface BestBidOffer {
   offer: QuoteFigures; 
 }
 
-export type DepthOfBookItem = {
+export type DepthOfBook = {
   bondId: string;
   bondName: string;
   ready?: boolean;
@@ -104,14 +108,11 @@ export type UserQuote = {
   price: number;
 }
 
-export type DepthOfBook = {
-  [key: string]: DepthOfBookItem;
-}
-
 export type ReducerState = {
-  depthOfBook: DepthOfBook;
+  depthOfBook: DepthOfBook[];
   accountMaster: AccountMaster[];
   bondMaster: BondMaster[];
+  bondMasterKeyBook: BondMasterKeyBook;
 }
 
 export type QuoteBookContext = {
@@ -119,8 +120,9 @@ export type QuoteBookContext = {
   dispatch: any;
   selectedBond: string;
   setSelectedBond: (boindId: string) => void;
-  depthOfBook: DepthOfBook;
+  depthOfBook: DepthOfBook[];
   accountMaster: AccountMaster[];
+  bondMasterKeyBook: BondMasterKeyBook;
   bondMaster: BondMaster[];
   latestBondId: string;
   userQuotes: UserQuote[];
@@ -141,10 +143,10 @@ export interface QuoteBookHooks {
   bondMaster: BondMaster[];
   accountMaster: AccountMaster[];
   setSelectedBond: (bondId: string) => void;
-  depthOfBook: DepthOfBook;
-  selectedBondData: BondViewProps[];
-  bestBidOffer: BestBidOffer[];
+  depthOfBook: DepthOfBook[];
+  // selectedBondData: BondViewProps[];
   latestBondId: string;
   userQuotes: UserQuote[];
+  getBookItemByBondId: (bondId: string) => DepthOfBook;
 }
 

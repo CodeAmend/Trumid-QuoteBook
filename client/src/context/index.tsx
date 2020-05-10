@@ -12,7 +12,7 @@ import {
 
 import { reconcileWithMasters } from './utils';
 import { actions } from './actions';
-import { quoteBookReducer } from './reducer';
+import { quoteBookReducer, initialReducerState } from './reducer';
 const socket = io('http://localhost:3000');
 
 
@@ -20,7 +20,7 @@ const socket = io('http://localhost:3000');
 const initialQuoteBookContext = {
   socket: null,
   dispatch: null,
-  depthOfBook: {},
+  depthOfBook: [],
   accountMaster: [],
   bondMaster: [],
   selectedBond: '',
@@ -28,13 +28,7 @@ const initialQuoteBookContext = {
   latestBondId: '',
   userQuotes: [],
   setUserQuotes: () => {},
-};
-
-const initialReducerState = {
-  depthOfBook: {},
-  accountMaster: [],
-  bondMaster: [],
-  latestBondId: '',
+  bondMasterKeyBook: {},
 };
 
 export const context = React.createContext<QuoteBookContext>(initialQuoteBookContext);

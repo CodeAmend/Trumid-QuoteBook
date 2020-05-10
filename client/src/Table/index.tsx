@@ -1,7 +1,7 @@
 import React from "react"
 import { AgGridReact, AgGridReactProps } from 'ag-grid-react';
 import { GridSizeChangedEvent } from 'ag-grid-community';
-import { DepthOfBookItem } from '../context/types';
+import { DepthOfBook } from '../context/types';
 
 import { AgWraper } from './styles';
 
@@ -26,7 +26,7 @@ const Table = (props: AgGridReactProps) => {
     params.api.sizeColumnsToFit();
   }
 
-  const getRowNodeId = (params: DepthOfBookItem): string => {
+  const getRowNodeId = (params: DepthOfBook): string => {
     return params.bondId;
   }
 

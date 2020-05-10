@@ -16,11 +16,11 @@ const Container = styled.section`
 const QuoteBookApp = () => {
   return (
     <Container>
-      <FormView />
-      <BondView />
       <AllView />
     </Container>
   );
 }
 
 export default QuoteBookApp;
+      // <FormView />
+      // <BondView />
