@@ -28,7 +28,7 @@ const BondView = () => {
     return agId;
   }
 
-  if (!selectedBond || !bondViewData.length) {
+  if (!selectedBond) {
     return null;
   }
 
