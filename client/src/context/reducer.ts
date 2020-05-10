@@ -8,36 +8,35 @@ import {
 
 
 export const quoteBookReducer = (state: ReducerState, action: any): any => {
-  let depthOfBook: DepthOfBook = state.depthOfBook;
+  const { payload } = action;
 
   switch (action.type) {
     case actionTypes.QUOTE_CREATE:
-      addNewQuoteToBook(state, action.payload);
-      return { ...state, latestBondId: action.payload.bondId }
+      addNewQuoteToBook(state, payload);
+      return { ...state, latestBondId: payload.bondId }
 
     case actionTypes.QUOTE_UPDATE:
-      updateQuoteOnBook(state, action.payload);
-      
-      return { ...state, latestBondId: action.payload.bondId }
+      updateQuoteOnBook(state, payload);
+      return { ...state, latestBondId: payload.bondId }
 
     case actionTypes.QUOTE_CANCEL:
-      removeQuoteFromBook(state, action.payload);
-      return { ...state, latestBondId: action.payload.bondId }
+      removeQuoteFromBook(state, payload);
+      return { ...state, latestBondId: payload.bondId }
 
     case actionTypes.INITIALIZE_ACCOUNT_MASTER:
-      return { ...state, accountMaster: action.payload }
+      return { ...state, accountMaster: payload }
 
     case actionTypes.INITIALIZE_BOND_MASTER:
-      return { ...state, bondMaster: action.payload }
+      return { ...state, bondMaster: payload }
 
     case actionTypes.RECONCILE_QUOTEBOOK:
-      action.payload.forEach((quote: BondQuote) => {
+      payload.forEach((quote: BondQuote) => {
         addNewQuoteToBook(state, quote);
       })
       return state
 
     case actionTypes.INITIALIZE_DEPTH_OF_BOOK:
-      depthOfBook = action.payload.reduce((acc: DepthOfBook, bondItem: BondMaster) => {
+      const depthOfBook = payload.reduce((acc: DepthOfBook, bondItem: BondMaster) => {
         acc[bondItem.id] = {
           bondId: bondItem.id,
           bondName: bondItem.name,
