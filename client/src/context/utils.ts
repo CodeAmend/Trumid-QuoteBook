@@ -54,24 +54,48 @@ export const reconcileWithMasters = (state: ReducerState, data: QuoteAccepted): 
 }
 
 export const addNewQuoteToBook = (state: ReducerState, quote: BondQuote): DepthOfBook => {
-  const { accountMaster, depthOfBook: book } = state;
-  const { qty, price, bondId, accountId } = quote;
+  const { accountMaster, depthOfBook } = state;
+  const { qty, price, side, bondId, accountId } = quote;
   const { name } = accountMaster[accountId];
 
-  const item = book[bondId];
+  // Mutable bond
+  const currentBond = depthOfBook[bondId];
+  currentBond.ready = true;
+
   const figures: QuoteFigures = { client: name, qty, price, quoteId: quote.id };
 
-  if (quote.side === 'B') {
-    item.bids.push(figures)
-    item.bids = item.bids.sort(byPrice)
-  } else { // Side === 'S'
-    item.offers.push(figures);
+  // TODO: Maybe a way to clean this up. 
+  // Lots of weird code for performance
+  if (side === 'B') {
+    const currentIsBest = currentBond.bids.some(bid => bid.price > quote.price);
+    if (currentIsBest && currentBond.bids.length > 1) {
+      const prev = currentBond.bids[0];
+      currentBond.bids[0] = figures;
+      currentBond.bids.push(prev);
+    } else {
+      currentBond.bids.push(figures)
+    }
+  } else {
+    const currentIsBest = currentBond.offers.some(offer => offer.price < quote.price);
+    if (currentIsBest && currentBond.offers.length > 1) {
+      const prev = currentBond.offers[0];
+      currentBond.offers[0] = figures;
+      currentBond.offers.push(prev);
+    } else {
+      currentBond.offers.push(figures)
+    }
   }
+  return state.depthOfBook;
+}
 
-  // TODO: figure a better way to not hack this
-  // I currently need this because I need to see when this was updated the first time.
-  item.ready = true;
-  return book;
+export const reconcileQuotebook = (state: ReducerState, quotes: BondQuote[]): DepthOfBook => {
+  const { depthOfBook } = state;
+
+  quotes.forEach(quote => {
+    addNewQuoteToBook(state, quote);
+  });
+
+  return depthOfBook;
 }
 
 export const updateQuoteOnBook = (state: ReducerState, quote: BondQuote): DepthOfBook => {

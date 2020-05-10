@@ -5,6 +5,7 @@ import {
   updateQuoteOnBook,
   removeQuoteFromBook,
   createDepthOfBookTemplate,
+  reconcileQuotebook,
 } from './utils';
 
 
@@ -23,10 +24,8 @@ export const quoteBookReducer = (state: ReducerState, action: any): any => {
       return { ...state, depthOfBook };
 
     case actionTypes.RECONCILE_QUOTEBOOK:
-      payload.forEach((quote: BondQuote) => {
-        addNewQuoteToBook(state, quote);
-      })
-      return state
+      reconcileQuotebook(state, payload);
+      break;
 
     case actionTypes.QUOTE_CREATE:
       addNewQuoteToBook(state, payload);
@@ -43,4 +42,6 @@ export const quoteBookReducer = (state: ReducerState, action: any): any => {
     default:
       return state;
   }
+
+  return state;
 }
