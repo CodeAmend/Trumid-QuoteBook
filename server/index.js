@@ -9,7 +9,7 @@ var io = require('socket.io')(http);
 const ACCOUNT_MASTER_SIZE = 5;
 const BOND_MASTER_SIZE = 100;
 const MIN_QUOTEBOOK_SIZE = 50;
-const QUOTE_ACTIONS_PER_SECOND = 100;
+const QUOTE_ACTIONS_PER_SECOND = 10;
 
 const QUOTE_ACTION = {
   NEW: 'N',
