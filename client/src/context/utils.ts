@@ -38,45 +38,6 @@ export const createDepthOfBookTemplate = (bondMaster: BondMaster[]): DepthOfBook
   }, []);
 }
 
-export const addNewQuoteToBook = (state: ReducerState, quote: BondQuote): DepthOfBook[] => {
-  const { accountMaster, depthOfBook } = state;
-  const { qty, price, side, bondId, accountId } = quote;
-  const { name } = accountMaster[accountId];
-
-  // MasterKeyBook, keps from iterating the depthOfBook array
-  const bondIndex = state.bondMasterKeyBook[bondId];
-  // Mutable bond
-  const currentBond = depthOfBook[bondIndex];
-  const { bids, offers } = currentBond;
-  currentBond.ready = true;
-
-  const figures: QuoteFigures = { client: name, qty, price, quoteId: quote.id };
-
-  // TODO: Maybe a way to clean this up. 
-  // Lots of weird code for performance
-  if (side === 'B') {
-    const currentIsBest = bids.some(bid => bid.price > quote.price);
-    if (currentIsBest && bids.length > 1) {
-      const prev = bids[0];
-      bids[0] = figures;
-      bids.push(prev);
-    } else {
-      bids.push(figures)
-    }
-  } else {
-    const currentIsBest = offers.some(offer => offer.price < quote.price);
-    if (currentIsBest && offers.length > 1) {
-      const prev = offers[0];
-      offers[0] = figures;
-      offers.push(prev);
-    } else {
-      currentBond.offers.push(figures)
-    }
-  }
-  return state.depthOfBook;
-}
-
-
 export const reconcileQuotebook = (state: ReducerState, quotes: BondQuote[]): DepthOfBook[] => {
   const { depthOfBook } = state;
 
@@ -113,35 +74,55 @@ export const reconcileWithMasters = (state: ReducerState, data: QuoteAccepted): 
   }
 }
 
-
-export const updateQuoteOnBook = (state: ReducerState, quote: BondQuote): DepthOfBook[] => {
-  const { accountMaster, depthOfBook } = state;
-  const { qty, price, side, bondId, accountId } = quote;
-  const client = accountMaster[accountId].name;
-
-  const bondIndex = state.bondMasterKeyBook[bondId];
-  const currentBond: DepthOfBook = depthOfBook[bondIndex];
-  const { bids, offers } = currentBond;
-
-  const figures: QuoteFigures = { client, qty, price, quoteId: quote.id };
-
+export const setPriceByHighest = (quote: BondQuote, currentBond: DepthOfBook, newFigure: QuoteFigures): void => {
+  const { side } = quote;
+  const { offers, bids } = currentBond;
   if (side === 'B') {
     if (offers.length > 1 && offers[0].price > quote.price) {
       const prev = offers[0];
-      offers[0] = figures;
+      offers[0] = newFigure;
       offers.push(prev);
     } else {
-      offers.push(figures);
+      offers.push(newFigure);
     }
   } else { // Side === 'S'
     if (bids.length > 1 && bids[0].price > quote.price) {
       const prev = bids[0];
-      bids[0] = figures;
+      bids[0] = newFigure;
       bids.push(prev);
     } else {
-      bids.push(figures);
+      bids.push(newFigure);
     }
   }
+}
+
+export const addNewQuoteToBook = (state: ReducerState, quote: BondQuote): DepthOfBook[] => {
+  const { accountMaster, depthOfBook } = state;
+  const { qty, price, bondId, accountId } = quote;
+  const { name } = accountMaster[accountId];
+
+  const bondIndex = state.bondMasterKeyBook[bondId];
+  const currentBond = depthOfBook[bondIndex];
+
+  currentBond.ready = true;
+
+  const figures: QuoteFigures = { client: name, qty, price, quoteId: quote.id };
+
+  setPriceByHighest(quote, currentBond, figures);
+  return state.depthOfBook;
+}
+
+export const updateQuoteOnBook = (state: ReducerState, quote: BondQuote): DepthOfBook[] => {
+  const { accountMaster, depthOfBook } = state;
+  const { qty, price, bondId, accountId } = quote;
+  const client = accountMaster[accountId].name;
+
+  const bondIndex = state.bondMasterKeyBook[bondId];
+  const currentBond: DepthOfBook = depthOfBook[bondIndex];
+
+  const figures: QuoteFigures = { client, qty, price, quoteId: quote.id };
+
+  setPriceByHighest(quote, currentBond, figures);
   return depthOfBook;
 }
 
