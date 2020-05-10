@@ -48,78 +48,84 @@ export const Provider = (props: { children: ReactNode }) => {
   const { accountMaster, bondMaster } = reducerState;
   const [selectedBond, setSelectedBond] = React.useState<string>('')
 
+  // INIT Master Tables
   React.useEffect(() => {
-    socket.on('quoteBook', setQuoteBook);
-
     socket.on('accountMaster', (data: AccountMaster[]) => {
       dispatch(actions.initializeAccountMasterWith(data));
     })
-
     socket.on('bondMaster', (data: BondMaster[]) => {
       dispatch(actions.initializeBondsMasterWith(data));
     })
-
-    socket.on('quoteAction', ({ action, quote }: QuoteAction) => {
-      if (action === 'N') {
-        dispatch(actions.createQuoteWith(quote));
-      }
-
-      if (action === 'U') {
-        dispatch(actions.updateQuoteWith(quote));
-      }
-
-      if (action === 'C') {
-        dispatch(actions.cancelQuoteWith(quote));
-      }
-    });
-
-    // TODO: !!! Connot reach outside scope socket `this`;
-    socket.on('quoteAccepted', (quoteAccepted: QuoteAccepted) => {
-      const { action, requestId } = quoteAccepted;
-      const newUserQuote = reconcileWithMasters(reducerState, quoteAccepted);
-
-      if (action === 'N') {
-        console.log("N", newUserQuote)
-        setUserQuotes(userQuotes.concat(newUserQuote));
-        // TODO: Dispatch toast message
-      }
-
-      if (action === 'U') {
-        console.log("U", newUserQuote)
-        setUserQuotes(prev => prev.map(uq => {
-          if (uq.requestId === requestId) {
-            return newUserQuote;
-          }
-          return uq;
-        }));
-      }
-
-      if (action === 'C') {
-        setUserQuotes(prev => prev.filter(uq => uq.requestId === requestId));
-        // TODO: Dispatch toast message
-      }
-    });
-    // socket.on('quoteRejected', console.log);
-
     socket.emit('accountMaster.snapshot')
     socket.emit('bondMaster.snapshot')
-  }, []);
+  }, [])
 
-  // After Master Tables Loaded 
+
+  // INIT BondMaster and emit QuoteBook
   React.useEffect(() => {
     if (accountMaster.length && bondMaster.length) {
+      socket.on('quoteBook', setQuoteBook);
+
+      // Setup blank Bond Master Table
       dispatch(actions.initializeDepthOfBookWith(bondMaster));
+
+      // Get actual data
       socket.emit('quoteBook.snapshot');
     }
-  }, [accountMaster, bondMaster]);
+  }, [accountMaster.length, bondMaster.length]);
 
-  // After quotebook is reconciled to depthOfBook
+
+  // INIT subscription after quoteBook is filled
   React.useEffect(() => {
     if (quoteBook.length) {
+      // Reconcile BondMaster && QuoteBook
       dispatch(actions.reconcileQuotebookWith(quoteBook));
+
+      socket.on('quoteAction', ({ action, quote }: QuoteAction) => {
+        if (action === 'N') {
+          dispatch(actions.createQuoteWith(quote));
+        }
+
+        if (action === 'U') {
+          dispatch(actions.updateQuoteWith(quote));
+        }
+
+        if (action === 'C') {
+          dispatch(actions.cancelQuoteWith(quote));
+        }
+      });
+
+      socket.on('quoteAccepted', (quoteAccepted: QuoteAccepted) => {
+        const { action, requestId } = quoteAccepted;
+        const newUserQuote = reconcileWithMasters(reducerState, quoteAccepted);
+
+        if (action === 'N') {
+          // TODO: Dispatch toast message
+          console.log("N", newUserQuote)
+          setUserQuotes(userQuotes.concat(newUserQuote));
+        }
+
+        if (action === 'U') {
+          // TODO: Dispatch toast message
+          console.log("U", newUserQuote)
+          setUserQuotes(prev => prev.map(uq => {
+            if (uq.requestId === requestId) {
+              return newUserQuote;
+            }
+            return uq;
+          }));
+        }
+
+        if (action === 'C') {
+          // TODO: Dispatch toast message
+          setUserQuotes(prev => prev.filter(uq => uq.requestId === requestId));
+        }
+      });
+
+      // INIT Subscribtion
       socket.emit('quoteBook.subscribe');
     }
-  }, [quoteBook]);
+  }, [quoteBook.length]);
 
 
   const otherState = {
