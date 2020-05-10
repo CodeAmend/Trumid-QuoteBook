@@ -6,6 +6,7 @@ import {
   removeQuoteFromBook,
   createDepthOfBookTemplate,
   reconcileQuotebook,
+  updateBondViewRowData,
 } from './utils';
 
 
@@ -14,6 +15,7 @@ export const initialReducerState = {
   accountMaster: [],
   bondMaster: [],
   latestBondId: '',
+  bondViewData: [],
 };
 
 export const quoteBookReducer = (state: ReducerState, action: any): any => {
@@ -40,6 +42,17 @@ export const quoteBookReducer = (state: ReducerState, action: any): any => {
         ...state,
         depthOfBook: reconcileQuotebook(state, payload),
       }
+
+    case actionTypes.UPDATE_BOND_VIEW:
+      const bondViewData = updateBondViewRowData(state, payload);
+      return {
+        ...state,
+        bondViewData,
+      }
+
+    case actionTypes.UPDATE_BOND_VIEW:
+      const singBondQuotes = updateBondViewRowData(state, payload)
+      return { ...state, singBondQuotes };
 
     case actionTypes.QUOTE_CREATE:
       addNewQuoteToBook(state, payload);

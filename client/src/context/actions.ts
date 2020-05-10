@@ -17,6 +17,7 @@ export const actionTypes = {
   INITIALIZE_ACCOUNT_MASTER: 'INITIALIZE_ACCOUNT_MASTER',
   INITIALIZE_BOND_MASTER: 'INITIALIZE_BOND_MASTER',
   RECONCILE_QUOTEBOOK: 'RECONCILE_QUOTEBOOK',
+  UPDATE_BOND_VIEW: 'UPDATE_BOND_VIEW',
 
   QUOTE_CREATE: 'QUOTE_CREATE',
   QUOTE_CANCEL: 'QUOTE_CANCEL',
@@ -51,6 +52,8 @@ export const initializeBondsMasterWith =
 export const convertAndMarrySnapshotsToBondIdKeysWith =
   (payload: SnapshotProps) => ({ type: actionTypes.CONVERT_SNAPSHOTS, payload });
 
+export const updateBondView =
+  (bondId: string) => ({ type: actionTypes.UPDATE_BOND_VIEW, payload: bondId});
 
 export const actions = {
   quoteSubscribe,
@@ -59,6 +62,8 @@ export const actions = {
   createQuoteWith,
   updateQuoteWith,
   cancelQuoteWith,
+
+  updateBondView,
 
   convertAndMarrySnapshotsToBondIdKeysWith,
   initializeDepthOfBookWith,

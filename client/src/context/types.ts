@@ -108,11 +108,14 @@ export type UserQuote = {
   price: number;
 }
 
+export type BondViewData = any;
+
 export type ReducerState = {
   depthOfBook: DepthOfBook[];
   accountMaster: AccountMaster[];
   bondMaster: BondMaster[];
   bondMasterKeyBook: BondMasterKeyBook;
+  bondViewData: BondViewData[];
 }
 
 export type QuoteBookContext = {
@@ -126,13 +129,9 @@ export type QuoteBookContext = {
   bondMaster: BondMaster[];
   latestBondId: string;
   userQuotes: UserQuote[];
+  bondViewData: BondViewData[];
   // TODO: what to do about React.useEffect setters for typescript
   setUserQuotes: any;
-}
-
-export type BondViewProps = {
-  bid: QuoteFigures;
-  offer: QuoteFigures;
 }
 
 export interface QuoteBookHooks {
@@ -144,10 +143,11 @@ export interface QuoteBookHooks {
   accountMaster: AccountMaster[];
   setSelectedBond: (bondId: string) => void;
   depthOfBook: DepthOfBook[];
-  // selectedBondData: BondViewProps[];
   latestBondId: string;
   userQuotes: UserQuote[];
   getBookItemByBondId: (bondId: string) => DepthOfBook;
   bondMasterKeyBook: BondMasterKeyBook;
+  bondViewData: BondViewData[];
+  initBondView: () => void;
 }
 

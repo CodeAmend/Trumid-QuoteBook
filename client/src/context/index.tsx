@@ -8,6 +8,7 @@ import {
   QuoteAccepted,
   AccountMaster,
   UserQuote,
+  BondViewData,
 } from './types'
 
 import { reconcileWithMasters } from './utils';
@@ -29,6 +30,7 @@ const initialQuoteBookContext = {
   userQuotes: [],
   setUserQuotes: () => {},
   bondMasterKeyBook: {},
+  bondViewData: [],
 };
 
 export const context = React.createContext<QuoteBookContext>(initialQuoteBookContext);
@@ -120,6 +122,13 @@ export const Provider = (props: { children: ReactNode }) => {
       socket.emit('quoteBook.subscribe');
     }
   }, [quoteBook.length, quoteBook]);
+
+  // Only Update if BondView is selected
+  React.useEffect(() => {
+    if (selectedBond && reducerState.latestBondId === selectedBond) {
+      dispatch(actions.updateBondView(selectedBond))
+    }
+  }, [reducerState.latestBondId])
 
 
   const otherState = {

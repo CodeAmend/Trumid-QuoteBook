@@ -6,6 +6,7 @@ import {
   QuoteAccepted,
   UserQuote,
   BondMaster,
+  BestBidOffer,
 } from './types';
 
 export const keyGen = () => Math.random().toString(36).substr(2,5);
@@ -143,48 +144,39 @@ export const removeQuoteFromBook = (state: ReducerState, quote: BondQuote): Dept
   return depthOfBook;
 }
 
-// export const getBondsWithBestQuotes = (depthOfBook: DepthOfBook): BestBidOffer[] => {
-//   const topBidOffers: BestBidOffer[] = [];
+export const updateBondViewRowData = (state: ReducerState, selectedBond: string) => {
+  const bondIndex = state.bondMasterKeyBook[selectedBond];
+  const bondData = state.depthOfBook[bondIndex];
+  const { bondName, bids, offers } = bondData;
 
-//   if (!Object.keys(depthOfBook).length) {
-//     return [];
-//   }
+  let rowData: any = [];
 
-//   for (let [, { bondName, bids, offers, bondId }] of Object.entries(depthOfBook)) {
-//     const showBondsWithoutData = true;
-//     if (bids.length || offers.length || showBondsWithoutData) {
-//       const bestBid: QuoteFigures = bids.sort(byPrice)[0];
-//       const bestOffer: QuoteFigures = offers.sort(byPrice)[0];
+  const maxLength = Math.max(bids.length, offers.length);
 
-//       topBidOffers.push({
-//         bondName,
-//         bondId,
-//         bid: bestBid || null,
-//         offer: bestOffer || null,
-//       })
-//     } 
-//   }
-//   return topBidOffers; 
-// }
+  for (let bidIndex = 0; bidIndex < maxLength; bidIndex++) {
+    const bid = bids[bidIndex];
+    const offer = offers[bidIndex];
 
-// export const getingSingleBondWithQuotes = (depthOfBook: DepthOfBook[], bondId: string): BestBidOffer[] => {
-//   if (!bondId) return []; 
 
-//   const { bondName, bids, offers, } = depthOfBook.find(book => book.bondId === bondId);
-//   const maxLength = Math.max(bids.length, offers.length);
+    // This is for agGrid to selectively update
+    const agId = (bid?.quoteId || '') + (offer?.quoteId || '');
 
-//   let bondData: BestBidOffer[] = [];
-//   for (let i = 0; i < maxLength; i++) {
-//     const bid = bids[i];
-//     const offer = offers[i];
-    
-//     bondData.push({
-//       bondId,
-//       bondName,
-//       bid: bid[0],
-//       offer: offer[0],
-//     });
-//   }
-//   return bondData;
-// }
+    rowData.push({
+      bondId: selectedBond,
+      bondName,
+      agId,
+      bid: bid && {
+        client: bid.client,
+        price: bid.price,
+        qty: bid.qty,
+      },
+      offer: offer && {
+        client: offer.client,
+        price: offer.price,
+        qty: offer.qty,
+      },
+    });
+  }
 
+  return rowData;
+}
