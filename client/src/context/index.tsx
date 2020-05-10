@@ -72,7 +72,7 @@ export const Provider = (props: { children: ReactNode }) => {
       // Get actual data
       socket.emit('quoteBook.snapshot');
     }
-  }, [accountMaster.length, bondMaster.length]);
+  }, [accountMaster.length, bondMaster.length, bondMaster]);
 
 
   // INIT subscription after quoteBook is filled
@@ -125,7 +125,7 @@ export const Provider = (props: { children: ReactNode }) => {
       // INIT Subscribtion
       socket.emit('quoteBook.subscribe');
     }
-  }, [quoteBook.length]);
+  }, [quoteBook.length, quoteBook]);
 
 
   const otherState = {

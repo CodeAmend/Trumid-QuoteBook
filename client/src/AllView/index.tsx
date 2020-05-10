@@ -25,13 +25,15 @@ const AllView = () => {
     setSelectedBond(data.bondId)
   }
 
-  // Watch for latest bondId and call for update
-  React.useEffect(() => {
+  const checkIfShouldUpdate = () => {
     const latestRow = bestBidOffer.find(b => b.bondId === latestBondId);
     if (latestRow) {
       gridApi.current?.applyTransactionAsync({ update: [latestRow]});
     }
-  }, [latestBondId]);
+  }
+
+  // Watch for latest bondId and call for update
+  React.useEffect(checkIfShouldUpdate, [latestBondId]);
 
   // If we make sure we have at least one update,
   // bestBidOffer will already be populated, so okay to render

@@ -1,5 +1,4 @@
 import React from "react"
-import { CellClickedEvent } from 'ag-grid-community';
 
 import { useQuotebook } from '../context/hooks';
 import { columnDefs } from './columnDefs';
@@ -10,11 +9,6 @@ import Table from '../Table';
 
 const BondView = () => {
   const { depthOfBook, selectedBond, selectedBondData } = useQuotebook();
-
-  const onCellClicked = ({ data, column }: CellClickedEvent) => {
-    const colGroupName = column.getColId().split('.')[0];
-    const { quoteId } = data[colGroupName];
-  }
 
   if (!selectedBond) {
     return null;
@@ -27,10 +21,8 @@ const BondView = () => {
         <p><strong>Name: </strong>{depthOfBook[selectedBond].bondName}</p>
       </Header>
       <Table
-        // onGridReady={onGridReady}
         columnDefs={columnDefs}
         rowData={selectedBondData}
-        onCellClicked={onCellClicked}
       />
     </ViewWrapper>
   )
