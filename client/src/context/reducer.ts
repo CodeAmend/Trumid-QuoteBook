@@ -2,7 +2,7 @@ import { ReducerState, BondMaster, BondMasterKeyBook } from './types';
 import { actionTypes } from './actions';
 import {
   addNewQuoteToBook,
-  // updateQuoteOnBook,
+  updateQuoteOnBook,
   // removeQuoteFromBook,
   createDepthOfBookTemplate,
   reconcileQuotebook,
@@ -45,9 +45,9 @@ export const quoteBookReducer = (state: ReducerState, action: any): any => {
       addNewQuoteToBook(state, payload);
       return { ...state, latestBondId: payload.bondId }
 
-    // case actionTypes.QUOTE_UPDATE:
-    //   updateQuoteOnBook(state, payload);
-    //   return { ...state, latestBondId: payload.bondId }
+    case actionTypes.QUOTE_UPDATE:
+      updateQuoteOnBook(state, payload);
+      return { ...state, latestBondId: payload.bondId }
 
     // case actionTypes.QUOTE_CANCEL:
     //   removeQuoteFromBook(state, payload);

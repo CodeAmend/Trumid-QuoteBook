@@ -116,35 +116,48 @@ export const reconcileWithMasters = (state: ReducerState, data: QuoteAccepted): 
 
 export const updateQuoteOnBook = (state: ReducerState, quote: BondQuote): DepthOfBook[] => {
   const { accountMaster, depthOfBook } = state;
-  const { qty, price, bondId, accountId } = quote;
+  const { qty, price, side, bondId, accountId } = quote;
   const client = accountMaster[accountId].name;
-  const item = depthOfBook[bondId];
+
+  const bondIndex = state.bondMasterKeyBook[bondId];
+  const currentBond: DepthOfBook = depthOfBook[bondIndex];
+  const { bids, offers } = currentBond;
 
   const figures: QuoteFigures = { client, qty, price, quoteId: quote.id };
 
-  // TODO: Refactor this messy code!!!
-  if (quote.side === 'B') {
-    item.bids = item.bids.map(bid => bid.client === client ? figures : bid);
-  } else { // Side === 'S'
-    item.offers = item.offers.map(bid => bid.client === client ? figures : bid);
-    item.offers = item.offers.sort(byPrice)
-  }
-  return depthOfBook;
-}
-
-export const removeQuoteFromBook = (state: ReducerState, quote: BondQuote): DepthOfBook[] => {
-  const { accountMaster, depthOfBook } = state;
-  const { accountId, side, bondId } = quote;
-  const clientName = accountMaster[accountId].name;
-
-  const item = depthOfBook[bondId];
   if (side === 'B') {
-    item.bids = item.bids.filter(bid => bid.client !== clientName);
-  } else {
-    item.offers = item.offers.filter(offer => offer.client !== clientName);
+    if (offers.length > 1 && offers[0].price > quote.price) {
+      const prev = offers[0];
+      offers[0] = figures;
+      offers.push(prev);
+    } else {
+      offers.push(figures);
+    }
+  } else { // Side === 'S'
+    if (bids.length > 1 && bids[0].price > quote.price) {
+      const prev = bids[0];
+      bids[0] = figures;
+      bids.push(prev);
+    } else {
+      bids.push(figures);
+    }
   }
   return depthOfBook;
 }
+
+// export const removeQuoteFromBook = (state: ReducerState, quote: BondQuote): DepthOfBook[] => {
+//   const { accountMaster, depthOfBook } = state;
+//   const { accountId, side, bondId } = quote;
+//   const clientName = accountMaster[accountId].name;
+
+//   const item = depthOfBook[bondId];
+//   if (side === 'B') {
+//     item.bids = item.bids.filter(bid => bid.client !== clientName);
+//   } else {
+//     item.offers = item.offers.filter(offer => offer.client !== clientName);
+//   }
+//   return depthOfBook;
+// }
 
 // export const getBondsWithBestQuotes = (depthOfBook: DepthOfBook): BestBidOffer[] => {
 //   const topBidOffers: BestBidOffer[] = [];
