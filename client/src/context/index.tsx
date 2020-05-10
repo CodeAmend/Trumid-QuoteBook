@@ -128,8 +128,7 @@ export const Provider = (props: { children: ReactNode }) => {
     if (selectedBond && reducerState.latestBondId === selectedBond) {
       dispatch(actions.updateBondView(selectedBond))
     }
-  }, [reducerState.latestBondId])
-
+  }, [reducerState.latestBondId, selectedBond])
 
   const otherState = {
     selectedBond,

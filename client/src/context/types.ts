@@ -149,5 +149,6 @@ export interface QuoteBookHooks {
   bondMasterKeyBook: BondMasterKeyBook;
   bondViewData: BondViewData[];
   initBondView: () => void;
+  selectedBondName: string;
 }
 

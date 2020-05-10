@@ -145,6 +145,10 @@ export const removeQuoteFromBook = (state: ReducerState, quote: BondQuote): Dept
 }
 
 export const updateBondViewRowData = (state: ReducerState, selectedBond: string) => {
+  if (!selectedBond) {
+    return state.bondViewData;
+  }
+
   const bondIndex = state.bondMasterKeyBook[selectedBond];
   const bondData = state.depthOfBook[bondIndex];
   const { bondName, bids, offers } = bondData;

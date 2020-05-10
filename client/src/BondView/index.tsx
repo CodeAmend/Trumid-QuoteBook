@@ -9,7 +9,7 @@ import Table from '../Table';
 
 
 const BondView = () => {
-  const { initBondView, selectedBond, bondViewData } = useQuotebook();
+  const { initBondView, selectedBond, bondViewData, selectedBondName } = useQuotebook();
   const gridApi = React.useRef<GridApi>();
 
   React.useEffect(() => {
@@ -37,7 +37,7 @@ const BondView = () => {
       <Header>
         <h1>Bond View</h1>
       </Header>
-      <p><strong>Name: </strong>BOND</p>
+      <p><strong>Name: </strong>{selectedBondName}</p>
       <Table
         getRowNodeId={getRowNodeId}
         onGridReady={onGridReady}

@@ -10,6 +10,7 @@ import {
 import { useQuotebook } from '../context/hooks';
 
 import UserQuoteTable from './UserQuoteTable';
+import { Form } from './styles';
 
 
 function FormView() {
@@ -22,15 +23,18 @@ function FormView() {
     setSelectedBond,
     depthOfBook,
     userQuotes,
+    initBondView,
   } = useQuotebook();
 
   const [formState, setFormState] = React.useState<CreateQuote & { action: Action }>(initialFormState);
 
-  // Resets fields and select values
   React.useEffect(() => {
-    setFormState({ ...initialFormState, bondId: selectedBond });
+    setFormState({
+      ...initialFormState,
+      bondId: selectedBond,
+    });
+    initBondView();
   }, [selectedBond]);
-
 
   // TODO: Fix this code smell. depthOfBook as a dependency should not be needed.
   // Bond SELECT setup
@@ -38,8 +42,8 @@ function FormView() {
     () => createBondSelectItems(bondMaster), [bondMaster, depthOfBook]); 
 
   // Account SELECT setup
-    const accountSelectItems = React.useMemo(
-      () => createAccountSelectItems(accountMaster), [accountMaster, depthOfBook]);
+  const accountSelectItems = React.useMemo(
+    () => createAccountSelectItems(accountMaster), [accountMaster, depthOfBook]);
 
 
   const handlFormChange =({ target }): void => {
@@ -52,6 +56,7 @@ function FormView() {
       setSelectedBond(target.value);
     }
   }
+
 
   // For CRUD Actions
   const handleOrderType = (): void => {
@@ -79,25 +84,7 @@ function FormView() {
   return(
     <React.Fragment>
 
-    <form>
-      {!!formState.bondId && (
-        <>
-        <button
-          disabled={disabled}
-          type="button"
-          style={{ marginRight: '1rem' }}
-          onClick={handleOrderType}
-        >Add</button>
-
-        <select name="action" value={formState.action} onChange={handlFormChange}>
-          {actionSelectItems.length && actionSelectItems.map(({ value, label }) => (
-            <option key={value} value={value}>{label}</option>
-          ))}
-        </select>
-        </>
-      )}
-
-
+    <Form>
       <select name="bondId" value={formState.bondId} onChange={handlFormChange}>
       {!formState.bondId && <option>Select a Bond</option>}
         {bondSelectItems.length && bondSelectItems.map(({ value, label }) => (
@@ -106,38 +93,87 @@ function FormView() {
       </select>
 
       {!!formState.bondId && (
-        <>
-        <select value={formState.accountId} onChange={handlFormChange}>
-          {accountSelectItems.length && accountSelectItems.map(({ value, label }) => (
-            <option key={value} value={value}>{label}</option>
-          ))}
-        </select>
-
-        <select name="side" value={formState.side} onChange={handlFormChange}>
-          <option value="B">Bid</option>
-          <option value="S">Offer</option>
-        </select>
-        
-        {formState.action !== 'C' && (
-          <>
-          <label htmlFor="qty">Qty (in millions):</label>
-          <input onChange={handlFormChange} value={formState.qty} type="number" id="qty" name="qty" />
-
-          <label htmlFor="price">Price: $</label>
-          <input onChange={handlFormChange} value={formState.price} type="number" id="price" name="price" />
-          </>
-        )}
-        </>
-      )}
-
-      {!!formState.bondId && (
         <button
           type="button"
           style={{ marginLeft: '1rem' }}
           onClick={() => setSelectedBond('')}
         >View All Bonds</button>
       )}
-    </form>
+    </Form>
+
+    {selectedBond && (
+      <Form>
+        <table>
+          <thead>
+            <tr>
+              <td></td>
+              <td>Transaction</td>
+              <td>Client</td>
+              <td>Type</td>
+              <td>Price</td>
+              <td>Qty</td>
+              <td></td>
+              <td></td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+            <td>
+              <button
+                disabled={disabled}
+                type="button"
+                style={{ marginRight: '1rem' }}
+                onClick={handleOrderType}
+              >Add</button>
+            </td>
+            <td>
+              <select name="action" value={formState.action} onChange={handlFormChange}>
+                {actionSelectItems.length && actionSelectItems.map(({ value, label }) => (
+                  <option key={value} value={value}>{label}</option>
+                ))}
+              </select>
+            </td>
+            <td>
+              <select value={formState.accountId} onChange={handlFormChange}>
+                {accountSelectItems.length && accountSelectItems.map(({ value, label }) => (
+                  <option key={value} value={value}>{label}</option>
+                ))}
+              </select>
+            </td>
+            <td>
+              <select name="side" value={formState.side} onChange={handlFormChange}>
+                <option value="B">Bid</option>
+                <option value="S">Offer</option>
+              </select>
+            </td>
+            <td>
+              <label htmlFor="qty">Qty (in millions):</label>
+              <input
+                onChange={handlFormChange}
+                value={formState.qty}
+                type="number"
+                id="qty"
+                name="qty"
+              />
+            </td>
+            <td>
+              <label htmlFor="price">Price: $</label>
+              <input
+                onChange={handlFormChange}
+                value={formState.price}
+                type="number"
+                id="price"
+                name="price"
+              />
+            </td>
+
+            </tr>
+          </tbody>
+        </table>
+
+      </Form>
+    )}
+      
 
     {userQuotes.length > 0 && <UserQuoteTable />}
 

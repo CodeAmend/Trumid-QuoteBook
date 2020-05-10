@@ -61,6 +61,15 @@ export const useQuotebook = (): QuoteBookHooks => {
     dispatch(actions.updateBondView(selectedBond));
   }
 
+  const selectedBondName = React.useMemo(() => {
+    if (!selectedBond) {
+      return '';
+    }
+    const bondIndex = bondMasterKeyBook[selectedBond]
+    const bondName = bondMaster[bondIndex].name;
+    return bondName;
+  }, [selectedBond])
+
   return {
     bondViewData,
     createQuote,
@@ -76,6 +85,7 @@ export const useQuotebook = (): QuoteBookHooks => {
     userQuotes,
     bondMasterKeyBook,
     initBondView,
+    selectedBondName,
   }
 }
 

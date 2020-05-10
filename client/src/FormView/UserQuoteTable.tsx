@@ -19,22 +19,26 @@ const UserQuoteTable = () => {
           <td>Qty</td>
           <td>Price</td>
           <td>Client</td>
+          <td>Cancel</td>
         </tr>
       </thead>
       <tbody>
-        {userQuotes.map(({ requestId, bondName, side, qty, price, quoteId }) => (
+      {userQuotes.map(({ clientName, requestId, bondName, side, qty, price, quoteId }) => {
+        return (
           <tr key={requestId}>
             <td>{bondName}</td>
             <td>{side === 'B' ? 'Buy' : 'Sell'}</td>
             <td>{qtyFormat(qty)}</td>
             <td>{priceFormat(price)}</td>
+            <td>{clientName}</td>
             <td>
               <button onClick={() => cancelQuote(quoteId)} type="button">
-                Cancel
+              Cancel
               </button>
             </td>
           </tr>
-        ))}
+        )
+      })}
       </tbody>
     </table>
   )
