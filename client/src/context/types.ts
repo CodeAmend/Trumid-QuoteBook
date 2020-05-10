@@ -35,7 +35,7 @@ export interface BondQuote {
   sequence: number
   side: Side;
   updatedAt: string;
-  reqId?: string;
+  requestId: string;
 }
 
 export interface CreateQuote {
@@ -45,6 +45,7 @@ export interface CreateQuote {
   price: number;
   qty: number;
   requestId?: string;
+  action?: Action;
 }
 
 export interface CancelQuote {
@@ -77,14 +78,6 @@ export type QuoteFigures = {
   quoteId: string;
 }
 
-export type BondsByBondIdKey = {
-  [key: string]: {
-    bondName: string;
-    bid: QuoteFigures[];
-    offer: QuoteFigures[];
-  }
-}
-
 export interface BestBidOffer {
   bondName: string;
   bondId: string;
@@ -100,6 +93,16 @@ export type DepthOfBookItem = {
   offers: QuoteFigures[];
 }
 
+export type UserQuote = {
+  bondId: string;
+  bondName: string;
+  clientName: string;
+  requestId: string;
+  side: string;
+  qty: number;
+  price: number;
+}
+
 export type DepthOfBook = {
   [key: string]: DepthOfBookItem;
 }
@@ -110,7 +113,7 @@ export type ReducerState = {
   bondMaster: BondMaster[];
 }
 
-export interface QuoteBookContext {
+export type QuoteBookContext = {
   socket: any;
   dispatch: any;
   selectedBond: string;
@@ -119,6 +122,9 @@ export interface QuoteBookContext {
   accountMaster: AccountMaster[];
   bondMaster: BondMaster[];
   latestBondId: string;
+  userQuotes: UserQuote[];
+  // TODO: what to do about React.useEffect setters for typescript
+  setUserQuotes: any;
 }
 
 export type BondViewProps = {
@@ -138,4 +144,6 @@ export interface QuoteBookHooks {
   selectedBondData: BondViewProps[];
   bestBidOffer: BestBidOffer[];
   latestBondId: string;
+  userQuotes: UserQuote[];
 }
+

@@ -14,7 +14,6 @@ const BondView = () => {
   const onCellClicked = ({ data, column }: CellClickedEvent) => {
     const colGroupName = column.getColId().split('.')[0];
     const { quoteId } = data[colGroupName];
-    console.log(quoteId)
   }
 
   if (!selectedBond) {

@@ -5,9 +5,12 @@ import {
   BondQuote,
   BondMaster,
   QuoteAction,
+  QuoteAccepted,
   AccountMaster,
+  UserQuote,
 } from './types'
 
+import { reconcileWithMasters } from './utils';
 import { actions } from './actions';
 import { quoteBookReducer } from './reducer';
 const socket = io('http://localhost:3000');
@@ -23,6 +26,8 @@ const initialQuoteBookContext = {
   selectedBond: '',
   setSelectedBond: () => {},
   latestBondId: '',
+  userQuotes: [],
+  setUserQuotes: () => {},
 };
 
 const initialReducerState = {
@@ -37,6 +42,7 @@ export const context = React.createContext<QuoteBookContext>(initialQuoteBookCon
 
 export const Provider = (props: { children: ReactNode }) => {
   const [quoteBook, setQuoteBook] = React.useState<BondQuote[]>([]);
+  const [userQuotes, setUserQuotes] = React.useState<UserQuote[]>([])
   const [reducerState, dispatch] = React.useReducer(quoteBookReducer, initialReducerState);
 
   const { accountMaster, bondMaster } = reducerState;
@@ -67,8 +73,33 @@ export const Provider = (props: { children: ReactNode }) => {
       }
     });
 
-    socket.on('quoteAccepted', console.log);
-    socket.on('quoteRejected', console.log);
+    // TODO: !!! Connot reach outside scope socket `this`;
+    socket.on('quoteAccepted', (quoteAccepted: QuoteAccepted) => {
+      const { action, requestId } = quoteAccepted;
+      const newUserQuote = reconcileWithMasters(reducerState, quoteAccepted);
+
+      if (action === 'N') {
+        console.log("N", newUserQuote)
+        setUserQuotes(userQuotes.concat(newUserQuote));
+        // TODO: Dispatch toast message
+      }
+
+      if (action === 'U') {
+        console.log("U", newUserQuote)
+        setUserQuotes(prev => prev.map(uq => {
+          if (uq.requestId === requestId) {
+            return newUserQuote;
+          }
+          return uq;
+        }));
+      }
+
+      if (action === 'C') {
+        setUserQuotes(prev => prev.filter(uq => uq.requestId === requestId));
+        // TODO: Dispatch toast message
+      }
+    });
+    // socket.on('quoteRejected', console.log);
 
     socket.emit('accountMaster.snapshot')
     socket.emit('bondMaster.snapshot')
@@ -91,7 +122,12 @@ export const Provider = (props: { children: ReactNode }) => {
   }, [quoteBook]);
 
 
-  const otherState = { selectedBond, setSelectedBond }
+  const otherState = {
+    selectedBond,
+    setSelectedBond,
+    userQuotes,
+    setUserQuotes,
+  }
 
   return (
     <context.Provider value={{ socket, ...reducerState, ...otherState, dispatch }} {...props} />

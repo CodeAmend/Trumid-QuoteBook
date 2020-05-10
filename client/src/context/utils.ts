@@ -4,6 +4,8 @@ import {
   ReducerState,
   DepthOfBook,
   BestBidOffer,
+  QuoteAccepted,
+  UserQuote,
 } from './types';
 
 export const keyGen = () => Math.random().toString(36).substr(2,5);
@@ -23,6 +25,31 @@ const sorter = (sortType: string) => (a: any, b: any) => {
 }
 
 export const byPrice = sorter('price');
+
+export const reconcileWithMasters = (state: ReducerState, data: QuoteAccepted): UserQuote => {
+  const { quote, requestId } = data;
+
+  const bond = state.bondMaster.find(b => b.id === quote.bondId);
+  const client = state.accountMaster.find(b => b.id === quote.accountId);
+
+  if (!bond) {
+    throw new Error(`Cannot find bond id: ${quote.bondId} in account master table`)
+  }
+
+  if (!client) {
+    throw new Error(`Cannot find client id: ${quote.accountId} in account master table`)
+  }
+
+  return {
+    bondId: bond.id,
+    bondName: bond.name,
+    clientName: client.name,
+    side: quote.side,
+    qty: quote.qty,
+    price: quote.price,
+    requestId,
+  }
+}
 
 export const addNewQuoteToBook = (state: ReducerState, quote: BondQuote): DepthOfBook => {
   const { accountMaster, depthOfBook: book } = state;

@@ -20,6 +20,7 @@ function FormView() {
     selectedBond,
     setSelectedBond,
     depthOfBook,
+    userQuotes,
   } = useQuotebook();
 
   const [formState, setFormState] = React.useState<CreateQuote & { action: Action }>(initialFormState);
